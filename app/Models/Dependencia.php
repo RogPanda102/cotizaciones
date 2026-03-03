@@ -10,6 +10,6 @@ class Dependencia extends Model
 
     protected $fillable = [
         'nombre',
-        'ubicacion'
+        'direccion'
     ];
 }
