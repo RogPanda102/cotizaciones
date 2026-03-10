@@ -5,6 +5,14 @@
 <div class="container">
     <h2>Editar Pedido</h2>
 
+    @if($pedido->estado === App\Enums\EstadoPedido::PAGADO)
+        <div class="alert alert-warning">
+            <p class="text-danger mb-0">
+                ⚠️ Este pedido ya está pagado y no puede modificarse.
+            </p>
+        </div>
+    @endif
+
     <form action="{{ route('pedidos.update', $pedido->id) }}" method="POST">
         @csrf
         @method('PUT')
@@ -13,9 +21,12 @@
         <div class="mb-3">
             <label for="estado" class="form-label">Estado</label>
             <select name="estado" class="form-control">
-                @foreach(\App\Enums\EstadoPedido::cases() as $estado)
-                    <option value="{{ $estado->value }}"
-                        {{ old('estado', $pedido->estado->value) == $estado->value ? 'selected' : '' }}>
+                <option value="{{ $pedido->estado->value }}" selected>
+                    {{ $pedido->estado->label() }}
+                </option>
+
+                @foreach($pedido->estado->siguientesEstados() as $estado)
+                    <option value="{{ $estado->value }}">
                         {{ $estado->label() }}
                     </option>
                 @endforeach
@@ -28,21 +39,22 @@
 
         {{-- Fecha Facturación --}}
         <div class="mb-3">
+            @if($pedido->estado === App\Enums\EstadoPedido::FACTURADO)
             <label for="fecha_facturacion" class="form-label">
                 Fecha de facturación
             </label>
 
-            <input type="date"
-                   name="fecha_facturacion"
-                   class="form-control"
-                   value="{{ old('fecha_facturacion', $pedido->fecha_facturacion) }}">
+                <input type="date" name="fecha_facturacion"
+                    value="{{ old('fecha_facturacion', $pedido->fecha_facturacion) }}">
+            @endif
 
             @error('fecha_facturacion')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
 
-        <button type="submit" class="btn btn-primary">
+        <button type="submit" class="btn btn-primary"
+            {{ $pedido->estado === App\Enums\EstadoPedido::PAGADO ? 'disabled' : '' }}>
             Actualizar Pedido
         </button>
 

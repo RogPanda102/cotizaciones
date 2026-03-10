@@ -2,89 +2,88 @@
 
 @section('content')
 
-<h2>Detalle del Pedido</h2>
+<h2>Pedido #{{ $pedido->id }}</h2>
 
-<p><strong>Monto aprobado:</strong> ${{ $pedido->monto_total_aprobado }}</p>
+<div class="mb-3">
+    <strong>Dependencia:</strong> {{ $pedido->dependencia->nombre }}
+</div>
 
-<p><strong>Total gastado:</strong> ${{ $pedido->totalGastado() }}</p>
+<div class="mb-4">
+    <strong>Estado:</strong> {{ $pedido->estado->label() }}
+</div>
 
-<p>
-    <strong>Resultado:</strong>
-    @if($pedido->tienePerdida())
-        <span style="color:red;">
-            ${{ $pedido->utilidad() }} (Pérdida)
-        </span>
-    @else
-        <span style="color:green;">
-            ${{ $pedido->utilidad() }} (Ganancia)
-        </span>
-    @endif
-</p>
+<div class="mb-4">
 
-<hr>
+    <span class="badge bg-secondary">
+        Estado: {{ $pedido->estado->label() }}
+    </span>
 
-<h3>Compras relacionadas</h3>
+    <span class="badge bg-info">
+        Entrega: {{ $pedido->fecha_entrega?->format('d/m/Y') }}
+    </span>
 
-<table class="table table-bordered">
-    <tr>
-        <th>Fecha</th>
-        <th>Monto</th>
-        <th>Descripción</th>
-    </tr>
+</div>
 
-    @foreach($pedido->compras as $compra)
-        <tr>
-            <td>{{ $compra->fecha?->format('d/m/Y') }}</td>
-            <td>${{ $compra->monto }}</td>
-            <td>{{ $compra->descripcion }}</td>
-        </tr>
-        <td>
-        @if($pedido->estado !== \App\Enums\EstadoPedido::PAGADO)
 
-            <a href="{{ route('compras.edit', $compra->id) }}">Editar</a>
+<ul class="nav nav-tabs" id="pedidoTabs" role="tablist">
 
-            <form action="{{ route('compras.destroy', $compra->id) }}"
-                method="POST"
-                style="display:inline;">
-                @csrf
-                @method('DELETE')
-                <button type="submit">Eliminar</button>
-            </form>
+<li class="nav-item">
+<button class="nav-link active" data-bs-toggle="tab" data-bs-target="#info">
+Info general
+</button>
+</li>
 
-        @endif
-        </td>
-    @endforeach
-</table>
+<li class="nav-item">
+<button class="nav-link" data-bs-toggle="tab" data-bs-target="#finanzas">
+Finanzas
+</button>
+</li>
 
-<a href="{{ route('pedidos.index') }}">Volver</a>
+<li class="nav-item">
+<button class="nav-link" data-bs-toggle="tab" data-bs-target="#plazos">
+Plazos
+</button>
+</li>
 
-@if($pedido->estado !== \App\Enums\EstadoPedido::PAGADO)
+<li class="nav-item">
+<button class="nav-link" data-bs-toggle="tab" data-bs-target="#compras">
+Compras
+</button>
+</li>
 
-<hr>
-<h4>Agregar Compra</h4>
+<li class="nav-item">
+<button class="nav-link" data-bs-toggle="tab" data-bs-target="#acciones">
+Acciones
+</button>
+</li>
 
-<form action="{{ route('compras.store') }}" method="POST">
-    @csrf
+</ul>
 
-    <input type="hidden" name="pedido_id" value="{{ $pedido->id }}">
 
-    <div>
-        <label>Descripción:</label>
-        <input type="text" name="descripcion" required>
-    </div>
+<div class="tab-content mt-4">
 
-    <div>
-        <label>Monto:</label>
-        <input type="number" step="0.01" name="monto" required>
-    </div>
+<div class="tab-pane fade show active" id="info">
+@include('pedidos.tabs.info-general')
+</div>
 
-    <div>
-        <label>Proveedor:</label>
-        <input type="text" name="proveedor" required>
-    </div>
+<div class="tab-pane fade" id="finanzas">
+@include('pedidos.tabs.finanzas')
+</div>
 
-    <button type="submit">Guardar Compra</button>
-</form>
+<div class="tab-pane fade" id="plazos">
+@include('pedidos.tabs.plazos')
+</div>
 
-@endif
+<div class="tab-pane fade" id="compras">
+@include('pedidos.tabs.compras')
+</div>
+
+<div class="tab-pane fade" id="acciones">
+@include('pedidos.tabs.acciones')
+</div>
+
+</div>
+
+</div>
+
 @endsection

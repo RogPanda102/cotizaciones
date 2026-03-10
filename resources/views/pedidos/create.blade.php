@@ -1,5 +1,16 @@
 <h2>Crear Pedido</h2>
 
+@if ($errors->any())
+    <div style="color:red;">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+
 <form action="{{ route('pedidos.store') }}" method="POST">
     @csrf
 

@@ -13,6 +13,10 @@ class Compra extends Model
         'monto',
     ];
 
+    protected $casts = [
+        'fecha' => 'date',
+    ];
+
     public function pedido()
     {
         return $this->belongsTo(Pedido::class);

@@ -8,6 +8,7 @@ use App\Models\Requisicion;
 use App\Models\Dependencia;
 use App\Enums\EstadoPedido;
 use Illuminate\Validation\Rules\Enum;
+use App\Services\PedidoService;
 
 class PedidoController extends Controller
 {
@@ -75,33 +76,27 @@ class PedidoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Pedido $pedido)
+    public function update(Request $request, Pedido $pedido, PedidoService $pedidoService)
     {
         $validated = $request->validate([
         'estado' => ['required', new Enum(EstadoPedido::class)],
         'fecha_facturacion' => 'nullable|date',
         ]);
 
-        $estadoEnum = EstadoPedido::from($validated['estado']);
+        try {
 
-        // 🔥 Regla de negocio elegante
-        if ($estadoEnum === EstadoPedido::FACTURADO && empty($validated['fecha_facturacion'])) {
+            $pedidoService->actualizarPedido($pedido, $validated);
+
+        } catch (\Exception $e) {
+
             return back()
-                ->withErrors([
-                    'fecha_facturacion' => 'Debe indicar la fecha de facturación cuando el pedido está facturado.'
-                ])
+                ->withErrors(['fecha_facturacion' => $e->getMessage()])
                 ->withInput();
         }
 
-        if ($estadoEnum !== EstadoPedido::FACTURADO) {
-            $validated['fecha_facturacion'] = null;
-        }
-
-        $pedido->update($validated);
-
         return redirect()->route('pedidos.index')
             ->with('success', 'Pedido actualizado correctamente.');
-        }
+    }
     /**
      * Remove the specified resource from storage.
      */

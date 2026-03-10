@@ -68,7 +68,14 @@ class Pedido extends Model
     {
         static::saving(function ($pedido) {
 
-            if ($pedido->fecha_adjudicacion && $pedido->dias_entrega) {
+            if (
+                $pedido->fecha_adjudicacion &&
+                $pedido->dias_entrega &&
+                (
+                    $pedido->isDirty('fecha_adjudicacion') ||
+                    $pedido->isDirty('dias_entrega')
+                )
+            ) {
 
                 $fecha = Carbon::parse($pedido->fecha_adjudicacion);
                 $dias = $pedido->dias_entrega;
