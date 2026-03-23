@@ -5,7 +5,7 @@
 <div class="container">
     <h2>Editar Pedido</h2>
 
-    @if($pedido->estado === App\Enums\EstadoPedido::PAGADO)
+    @if($pedido->estado->esFinal())
         <div class="alert alert-warning">
             <p class="text-danger mb-0">
                 ⚠️ Este pedido ya está pagado y no puede modificarse.

@@ -32,4 +32,25 @@ enum EstadoPedido: string
     {
         return in_array($nuevoEstado, $this->siguientesEstados(), true);
     }
+    public function badge(): string
+    {
+        return match($this) {
+            self::EN_PROCESO => 'secondary',
+            self::FACTURADO => 'primary',
+            self::ENTREGADO => 'warning',
+            self::PAGADO => 'success',
+        };
+    }
+    public function esFinal(): bool
+    {
+        return $this === self::PAGADO;
+    }
+    public function noEsFinal(): bool
+    {
+        return !$this->esFinal();
+    }
+    public function requiereFechaFacturacion(): bool
+    {
+        return $this === self::FACTURADO;
+    }
 }

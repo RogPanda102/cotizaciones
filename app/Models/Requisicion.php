@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Enums\EstadoPedido;
 use App\Enums\EstadoRequisicion;
 
 class Requisicion extends Model
@@ -17,7 +16,6 @@ class Requisicion extends Model
     protected $fillable = [
         'folio_externo',
         'descripcion',
-        'monto_estimado',
         'estado'
     ];
 

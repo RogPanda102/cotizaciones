@@ -2,23 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\UpdatePedidoRequest;
+use App\Http\Requests\StorePedidoRequest;
 use App\Models\Pedido;
 use App\Models\Requisicion;
 use App\Models\Dependencia;
-use App\Enums\EstadoPedido;
-use Illuminate\Validation\Rules\Enum;
 use App\Services\PedidoService;
+use App\Models\Empresa;
+use App\Models\Cliente;
+use App\Models\Proveedor;
 
 class PedidoController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
+    private $pedidoService;
+
+    public function __construct(PedidoService $pedidoService)
+    {
+        $this->pedidoService = $pedidoService;
+    }
+
     public function index()
     {
-        $pedidos = Pedido::with(['compras', 'requisicion', 'dependencia'])->get();
-        return view('pedidos.index', compact('pedidos'));
+        return redirect()->route('empresas.index');
     }
 
     /**
@@ -28,29 +37,24 @@ class PedidoController extends Controller
     {
         $requisiciones = Requisicion::all();
         $dependencias = Dependencia::all();
+        $empresas = Empresa::all();
+        $proveedores = Proveedor::all();
+        $empresaId = request('empresa_id');
 
-        return view('pedidos.create', compact('requisiciones', 'dependencias'));
+        return view('pedidos.create', compact('requisiciones', 'dependencias', 'empresas', 'proveedores', 'empresaId'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePedidoRequest $request)
     {
-        $request->validate([
-            'requisicion_id' => 'required|exists:requisiciones,id',
-            'dependencia_id' => 'required|exists:dependencias,id',
-            'fecha_adjudicacion' => 'required|date',
-            'fecha_entrega' => 'nullable|date',
-            'fecha_facturacion' => 'nullable|date',
-            'tipo_dias' => 'required|in:naturales,habiles',
-            'dias_credito' => 'required|integer',
-            'estado' => ['required', new Enum(EstadoPedido::class)],
-        ]);
+        
+        $pedido = $this->pedidoService->crearPedido(
+            $request->validated()
+        );
 
-        Pedido::create($request->all());
-
-        return redirect()->route('pedidos.index')
+        return redirect()->route('empresas.pedidos', $pedido->empresa_id)
             ->with('success', 'Pedido creado correctamente');
     }
 
@@ -59,7 +63,7 @@ class PedidoController extends Controller
      */
     public function show(Pedido $pedido)
     {
-        $pedido->load('compras');
+        $pedido->load(['compras', 'historialEstados']);
 
         return view('pedidos.show', compact('pedido'));
     }
@@ -76,12 +80,9 @@ class PedidoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Pedido $pedido, PedidoService $pedidoService)
+    public function update(UpdatePedidoRequest $request, Pedido $pedido, PedidoService $pedidoService)
     {
-        $validated = $request->validate([
-        'estado' => ['required', new Enum(EstadoPedido::class)],
-        'fecha_facturacion' => 'nullable|date',
-        ]);
+        $validated = $request->validated();
 
         try {
 
@@ -94,7 +95,7 @@ class PedidoController extends Controller
                 ->withInput();
         }
 
-        return redirect()->route('pedidos.index')
+        return redirect()->route('empresas.pedidos', $pedido->empresa_id)
             ->with('success', 'Pedido actualizado correctamente.');
     }
     /**
@@ -104,7 +105,19 @@ class PedidoController extends Controller
     {
         $pedido->delete();
 
-        return redirect()->route('pedidos.index')
+        return redirect()->route('empresas.pedidos', $pedido->empresa_id)
             ->with('success', 'Pedido eliminado correctamente.');
+    }
+
+    public function porEmpresa($empresaId)
+    {
+        $empresa = Empresa::findOrFail($empresaId);
+
+        $pedidos = Pedido::where('empresa_id', $empresaId)
+            ->with(['requisicion', 'dependencia'])
+            ->latest()
+            ->paginate(10);
+
+        return view('pedidos.index', compact('pedidos', 'empresa'));
     }
 }

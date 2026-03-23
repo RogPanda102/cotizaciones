@@ -8,6 +8,9 @@ class Compra extends Model
 {
     protected $fillable = [
         'pedido_id',
+        'fecha',
+        'cantidad',
+        'unidad',
         'proveedor',
         'descripcion',
         'monto',
@@ -20,5 +23,10 @@ class Compra extends Model
     public function pedido()
     {
         return $this->belongsTo(Pedido::class);
+    }
+
+    public function total()
+    {
+        return $this->cantidad * $this->monto;
     }
 }

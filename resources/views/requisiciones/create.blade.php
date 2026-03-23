@@ -1,5 +1,11 @@
 <h2>Crear Requisición</h2>
-
+@if ($errors->any())
+    <div>
+        @foreach ($errors->all() as $error)
+            <p>{{ $error }}</p>
+        @endforeach
+    </div>
+@endif
 <form action="{{ route('requisiciones.store') }}" method="POST">
     @csrf
 

@@ -34,7 +34,6 @@ class RequisicionController extends Controller
         $request->validate([
             'folio_externo' => 'required|unique:requisiciones,folio_externo',
             'descripcion' => 'required',
-            'monto_estimado' => 'required|numeric',
             'estado' => ['required', new Enum(EstadoRequisicion::class)],
         ]);
 
@@ -66,9 +65,8 @@ class RequisicionController extends Controller
     public function update(Request $request, Requisicion $requisicion)
     {
         $request->validate([
-            'folio_externo' => 'required|unique:requisiciones,folio_externo,',
+            'folio_externo' => 'required|unique:requisiciones,folio_externo,' . $requisicion->id,
             'descripcion' => 'required',
-            'monto_estimado' => 'required|numeric',
             'estado' => ['required', new Enum(EstadoRequisicion::class)],
         ]);
 
@@ -76,7 +74,6 @@ class RequisicionController extends Controller
         $requisicion->update($request->only([
             'folio_externo',
             'descripcion',
-            'monto_estimado',
             'estado',
         ]));
 

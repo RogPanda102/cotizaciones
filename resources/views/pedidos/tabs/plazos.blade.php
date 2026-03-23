@@ -38,7 +38,7 @@
 <p>
 <strong>Días restantes:</strong>
 
-@if($pedido->estado === \App\Enums\EstadoPedido::PAGADO)
+@if($pedido->estado->esFinal())
 
     <span class="badge bg-primary">
         Pagado el {{ $pedido->fecha_pago?->format('d/m/Y') }}

@@ -81,9 +81,9 @@
 
 <header>
     <nav>
-        <a href="{{ route('pedidos.index') }}">Pedidos</a>
         <a href="{{ route('requisiciones.index') }}">Requisiciones</a>
         <a href="{{ route('dependencias.index') }}">Dependencias</a>
+        <a href="{{ route('proveedores.index') }}">Proveedores</a>
     </nav>
 </header>
 
@@ -99,5 +99,6 @@
 
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="//unpkg.com/alpinejs" defer></script>
 </body>
 </html>

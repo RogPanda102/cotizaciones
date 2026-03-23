@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Pedido;
 use App\Models\Compra;
-use App\Enums\EstadoPedido;
-use Illuminate\Validation\Rules\Enum;
+use App\Http\Requests\StoreCompraRequest;
+use App\Http\Requests\UpdateCompraRequest;
 
 class CompraController extends Controller
 {
@@ -29,28 +29,16 @@ class CompraController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCompraRequest $request)
     {
-        $request->validate([
-        'pedido_id' => 'required|exists:pedidos,id',
-        'descripcion' => 'required|string',
-        'monto' => 'required|numeric',
-        'proveedor' => 'required|string',
-        ]);
-
         $pedido = Pedido::findOrFail($request->pedido_id);
 
         // 🔒 Bloqueo si está pagado
-        if ($pedido->estado === \App\Enums\EstadoPedido::PAGADO) {
+        if ($pedido->estado->esFinal()) {
             return back()->with('error', 'No se pueden agregar compras a un pedido pagado.');
         }
 
-        Compra::create([
-            'pedido_id' => $pedido->id,
-            'descripcion' => $request->descripcion,
-            'monto' => $request->monto,
-            'proveedor' => $request->proveedor,
-        ]);
+        Compra::create($request->validated());
 
         return redirect()->route('pedidos.show', $pedido->id)
             ->with('success', 'Compra registrada correctamente.');
@@ -75,24 +63,15 @@ class CompraController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Compra $compra)
+    public function update(UpdateCompraRequest $request, Compra $compra)
     {
-        $request->validate([
-        'descripcion' => 'required|string',
-        'monto' => 'required|numeric',
-        'proveedor' => 'required|string',
-        ]);
 
         // Bloqueo
-        if ($compra->pedido->estado === \App\Enums\EstadoPedido::PAGADO) {
+        if ($compra->pedido->estado->esFinal()) {
             return back()->with('error', 'No se pueden modificar compras de un pedido pagado.');
         }
 
-        $compra->update($request->only([
-            'descripcion',
-            'monto',
-            'proveedor'
-        ]));
+        $compra->update($request->validated());
 
         return redirect()->route('pedidos.show', $compra->pedido_id)
             ->with('success', 'Compra actualizada.');
@@ -103,7 +82,7 @@ class CompraController extends Controller
      */
     public function destroy(Compra $compra)
     {
-        if ($compra->pedido->estado === \App\Enums\EstadoPedido::PAGADO) {
+        if ($compra->pedido->estado->esFinal()) {
         return back()->with('error', 'No se pueden eliminar compras de un pedido pagado.');
         }
 

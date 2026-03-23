@@ -1,59 +1,82 @@
-@if($pedido->estado === App\Enums\EstadoPedido::PAGADO)
+@if($pedido->estado->esFinal())
 
-<div class="alert alert-warning">
-Este pedido ya fue pagado y no puede modificarse.
-</div>
+    <div class="alert alert-warning">
+    Este pedido ya fue pagado y no puede modificarse.
+    </div>
 
 @else
 
-<h4>Cambiar estado</h4>
+    <h4>Cambiar estado</h4>
 
-<form action="{{ route('pedidos.update', $pedido->id) }}" method="POST">
+    <form action="{{ route('pedidos.update', $pedido->id) }}" method="POST">
 
-@csrf
-@method('PUT')
+        @csrf
+        @method('PUT')
 
-<div class="mb-3">
+        <div class="mb-3">
 
-<label>Estado</label>
+            <label>Estado</label>
 
-<select name="estado" class="form-control">
+            <select name="estado" id="estadoSelect" class="form-control">
 
-<option value="{{ $pedido->estado->value }}" selected>
-{{ $pedido->estado->label() }}
-</option>
+                <option value="{{ $pedido->estado->value }}" selected>
+                    {{ $pedido->estado->label() }}
+                </option>
 
-@foreach($pedido->estado->siguientesEstados() as $estado)
+                @foreach($pedido->estado->siguientesEstados() as $estado)
 
-<option value="{{ $estado->value }}">
-{{ $estado->label() }}
-</option>
+                    <option value="{{ $estado->value }}">
+                    {{ $estado->label() }}
+                    </option>
 
-@endforeach
+                @endforeach
 
-</select>
+            </select>
 
-</div>
+        </div>
 
-@if($pedido->estado === App\Enums\EstadoPedido::FACTURADO)
 
-<div class="mb-3">
+        <div class="mb-3" id="fechaFacturacionGroup" style="display:none;">
 
-<label>Fecha facturación</label>
+            <label>Fecha facturación</label>
 
-<input type="date"
-name="fecha_facturacion"
-class="form-control"
-value="{{ old('fecha_facturacion', $pedido->fecha_facturacion) }}">
+            <input type="date"
+            name="fecha_facturacion"
+            class="form-control"
+            value="{{ old('fecha_facturacion', $pedido->fecha_facturacion) }}">
 
-</div>
+        </div>
 
-@endif
 
-<button class="btn btn-primary">
-Actualizar
-</button>
 
-</form>
+        <button class="btn btn-primary">
+        Actualizar
+        </button>
+    </form>
+    <script>
 
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const estadoSelect = document.getElementById('estadoSelect');
+            const fechaGroup = document.getElementById('fechaFacturacionGroup');
+
+            if (!estadoSelect) return;
+
+            function toggleFechaFacturacion() {
+
+                if (estadoSelect.value === 'facturado') {
+                    fechaGroup.style.display = 'block';
+                } else {
+                    fechaGroup.style.display = 'none';
+                }
+
+            }
+
+            estadoSelect.addEventListener('change', toggleFechaFacturacion);
+
+            toggleFechaFacturacion();
+
+        });
+
+    </script>
 @endif

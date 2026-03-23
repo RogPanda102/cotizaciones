@@ -21,9 +21,12 @@ class Pedido extends Model
     protected $fillable = [
         'requisicion_id',
         'dependencia_id',
+        'empresa_id',
+        'cliente_id',
+        'proveedor_id',
+        'tipo',
         'monto_total_aprobado',
         'fecha_adjudicacion',
-        'fecha_entrega',
         'fecha_facturacion',
         'tipo_dias',
         'dias_credito',
@@ -31,6 +34,7 @@ class Pedido extends Model
         'estado'
     ];
 
+    // Relaciones principales
     public function requisicion()
     {
         return $this->belongsTo(Requisicion::class);
@@ -46,13 +50,47 @@ class Pedido extends Model
         return $this->hasMany(Compra::class);
     }
 
+    public function empresa()
+    {
+        return $this->belongsTo(Empresa::class);
+    }
+
+    public function cliente()
+    {
+        return $this->belongsTo(Cliente::class);
+    }
+
+    public function proveedor()
+    {
+        return $this->belongsTo(Proveedor::class);
+    }
+
+    // Relaciones por tipo de pedido
+
+    public function servicio()
+    {
+        return $this->hasOne(PedidoServicio::class);
+    }
+
+    public function licencia()
+    {
+        return $this->hasOne(PedidoLicencia::class);
+    }
+
+    public function historialEstados()
+    {
+        return $this->hasMany(PedidoEstado::class)->orderBy('created_at');
+    }
+
     // Total gastado en compras
     public function totalGastado()
     {
-        return $this->compras()->sum('monto');
+        return $this->compras->sum(function ($compra) {
+            return $compra->cantidad * $compra->monto;
+        });
     }
 
-    // Utilidad del pedido
+    // Utilidad del pedido, calcula si hay ganancia
     public function utilidad()
     {
         return $this->monto_total_aprobado - $this->totalGastado();
@@ -101,7 +139,7 @@ class Pedido extends Model
             }
 
             if (
-            $pedido->estado === EstadoPedido::PAGADO &&
+            $pedido->estado->esFinal() &&
             $pedido->isDirty('estado')
             ) {
 
@@ -121,7 +159,7 @@ class Pedido extends Model
 
     public function getDiasRestantesAttribute()
     {
-        if ($this->estado === EstadoPedido::PAGADO) {
+        if ($this->estado->esFinal()) {
         return null;
         }
 
@@ -133,5 +171,14 @@ class Pedido extends Model
         $entrega = $this->fecha_entrega->copy()->startOfDay();
 
         return (int) $hoy->diffInDays($entrega, false);
+    }
+
+    public function fechaEntregaReal()
+    {
+        $estado = $this->historialEstados()
+            ->where('estado', 'entregado')
+            ->first();
+
+        return $estado?->created_at;
     }
 }

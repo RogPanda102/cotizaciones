@@ -5,6 +5,9 @@
 <tr>
 <th>Fecha</th>
 <th>Monto</th>
+<th>Cantidad</th>
+<th>Unidad</th>
+<th>Proveedor</th>
 <th>Descripción</th>
 <th>Acciones</th>
 </tr>
@@ -17,11 +20,17 @@
 
 <td>${{ number_format($compra->monto, 2) }}</td>
 
+<td>{{ $compra->cantidad }}</td>
+
+<td>{{ $compra->unidad }}</td>
+
+<td>{{ $compra->proveedor }}</td>
+
 <td>{{ $compra->descripcion }}</td>
 
 <td>
 
-@if($pedido->estado !== \App\Enums\EstadoPedido::PAGADO)
+@if($pedido->estado->noEsFinal())
 
 <a href="{{ route('compras.edit', $compra->id) }}">
 Editar
@@ -49,8 +58,18 @@ Eliminar
 
 </table>
 
+<div class="mt-3 text-end">
 
-@if($pedido->estado !== \App\Enums\EstadoPedido::PAGADO)
+<strong>
+Total gastado:
+
+${{ number_format($pedido->totalGastado(), 2) }}
+
+</strong>
+
+</div>
+
+@if($pedido->estado->noEsFinal())
 
 <hr>
 
@@ -61,6 +80,27 @@ Eliminar
 @csrf
 
 <input type="hidden" name="pedido_id" value="{{ $pedido->id }}">
+
+<div>
+
+<label>Fecha</label>
+<input type="date" name="fecha" class="form-control" required>
+
+</div>
+
+<div>
+
+<label>Cantidad</label>
+<input type="number" name="cantidad" min="1" class="form-control" required>
+
+</div>
+
+<div>
+
+<label>Unidad</label>
+<input type="text" name="unidad" class="form-control" required>
+
+</div>
 
 <div class="mb-3">
 

@@ -1,20 +1,35 @@
 @extends('layouts.app')
 
 @section('content')
-<h2>Lista de Pedidos</h2>
+<h2>Pedidos - {{ $empresa->nombre }}</h2>
+<a href="{{ route('empresas.index') }}">← Cambiar empresa</a>
 
-<a href="{{ route('pedidos.create') }}">Nuevo Pedido</a>
+<a href="{{ route('pedidos.create', ['empresa_id' => $empresa->id]) }}" class="btn btn-success">
+    Crear Pedido
+</a>
+
+<div style="margin-bottom: 15px;">
+    <strong>Total de pedidos:</strong> {{ $pedidos->total() }}
+</div>
 
 <br><br>
 
-
-<table class="table table-bordered">
+<form method="GET" style="margin-bottom: 15px;">
+    <input 
+        type="text" 
+        name="search" 
+        placeholder="Buscar..." 
+        value="{{ request('search') }}"
+    >
+    <button type="submit">Buscar</button>
+</form>
+<table class="table table-bordered table-hover">
     <tr>
         <th>Requisición</th>
         <th>Dependencia</th>
         <th>Monto</th>
         <th>Estado</th>
-        <th>Fecha Entrega</th>
+        <th>Fecha Limite</th>
         <th>Dias restantes</th>
         <th>Acciones</th>
     </tr>
@@ -22,7 +37,7 @@
     @foreach($pedidos as $pedido)
         @php
         $clase = '';
-        if ($pedido->estado === \App\Enums\EstadoPedido::PAGADO) {
+        if ($pedido->estado->esFinal()) {
             $clase = 'table-success';
         } elseif (!is_null($pedido->dias_restantes)) {
 
@@ -39,7 +54,11 @@
             <td>${{ number_format($pedido->monto_total_aprobado, 2) }}</td>
 
 
-            <td>{{ $pedido->estado->label() }}</td>
+            <td>
+                <span class="badge bg-{{ $pedido->estado->badge() }}">
+                    {{ $pedido->estado->label() }}
+                </span>
+            </td>
 
             <td>{{ $pedido->fecha_entrega?->format('d/m/Y') }}</td>
             
@@ -52,7 +71,7 @@
 
             <td>
                 <a href="{{ route('pedidos.show', $pedido->id) }}">
-                    Ver detalles
+                    Ver
                 </a>
 
                 <form action="{{ route('pedidos.destroy', $pedido->id) }}" 
@@ -61,7 +80,7 @@
                       onsubmit="return confirm('¿Seguro que deseas eliminar este pedido?')">
                     @csrf
                     @method('DELETE')
-                    <button type="submit">
+                    <button type="submit" class="btn btn-sm btn-danger">
                         Eliminar
                     </button>
                 </form>
@@ -69,4 +88,7 @@
         </tr>
     @endforeach
 </table>
+<div style="margin-top: 20px;">
+    {{ $pedidos->links() }}
+</div>
 @endsection
