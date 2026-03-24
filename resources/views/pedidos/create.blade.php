@@ -44,11 +44,34 @@
         <br><br>
 
         <label>Cliente:</label>
-        <input type="text" name="departamento_cliente" placeholder="Departamento" required>
-        <input type="text" name="contacto_cliente" placeholder="Contacto">
-        <input type="text" name="telefono_cliente" placeholder="Teléfono">
-        <input type="email" name="email_cliente" placeholder="Email">
-        <input type="text" name="direccion_cliente" placeholder="Dirección">
+            <select name="cliente_id" id="clienteSelect" required>
+                <option value="">Selecciona cliente</option>
+
+                @foreach($clientes as $cliente)
+                    <option value="{{ $cliente->id }}">
+                        {{ $cliente->departamento }} - {{ $cliente->contacto }}
+                    </option>
+                @endforeach
+            </select>
+
+        <button type="button" onclick="abrirModalCliente()">
+            + Nuevo cliente
+        </button>
+        <div id="modalCliente" style="display:none; background:white; padding:20px; border:1px solid #ccc; margin-top:20px;">
+
+            <h4>Nuevo Cliente</h4>
+
+            <input type="text" id="nuevo_departamento" placeholder="Departamento">
+            <input type="text" id="nuevo_contacto" placeholder="Contacto">
+            <input type="text" id="nuevo_telefono" placeholder="Teléfono">
+            <input type="email" id="nuevo_email" placeholder="Email">
+            <input type="text" id="nuevo_direccion" placeholder="Dirección">
+
+            <br><br>
+
+            <button type="button" onclick="guardarCliente()">Guardar</button>
+            <button type="button" onclick="cerrarModalCliente()">Cancelar</button>
+        </div>
 
         <br><br>
 
@@ -56,7 +79,9 @@
         <select name="proveedor_id" required>
             <option value="">Selecciona proveedor</option>
             @foreach($proveedores as $proveedor)
-                <option value="{{ $proveedor->id }}">{{ $proveedor->nombre }}</option>
+                <option value="{{ $proveedor->id }}">
+                    {{ $proveedor->empresa }}
+                </option>
             @endforeach
         </select>
 
@@ -75,20 +100,18 @@
         <div x-show="tipo === 'servicio'" x-transition x-cloak>
             <h5>Datos del Servicio</h5>
 
-            <div>
-                <label>Descripción</label>
-                <input type="text" name="descripcion_servicio" class="form-control" x-bind:disabled="tipo !== 'servicio'">
-            </div>
+            <textarea name="descripcion_servicio" placeholder="Descripción" x-bind:disabled="tipo !== 'servicio'"></textarea>
 
-            <div>
-                <label>Fecha inicio</label>
-                <input type="date" name="servicio_fecha_inicio" class="form-control" x-bind:disabled="tipo !== 'servicio'">
-            </div>
+            <textarea name="alcance" placeholder="Alcance" x-bind:disabled="tipo !== 'servicio'"></textarea>
 
-            <div>
-                <label>Fecha fin</label>
-                <input type="date" name="servicio_fecha_fin" class="form-control" x-bind:disabled="tipo !== 'servicio'">
-            </div>
+            <input type="text" name="responsable" placeholder="Responsable" x-bind:disabled="tipo !== 'servicio'">
+
+            <textarea name="entregables" placeholder="Entregables" x-bind:disabled="tipo !== 'servicio'"></textarea>
+
+            <textarea name="observaciones" placeholder="Observaciones" x-bind:disabled="tipo !== 'servicio'"></textarea>
+
+            <input type="date" name="fecha_inicio" x-bind:disabled="tipo !== 'servicio'">
+            <input type="date" name="fecha_fin" x-bind:disabled="tipo !== 'servicio'">
         </div>
 
         <br><br>
@@ -96,20 +119,16 @@
         <div x-show="tipo === 'licencia'" x-transition x-cloak>
             <h5>Datos de Licencia</h5>
 
-            <div>
-                <label>Nombre de licencia</label>
-                <input type="text" name="nombre_licencia" class="form-control" x-bind:disabled="tipo !== 'licencia'">
-            </div>
+            <input type="text" name="nombre_licencia" placeholder="Nombre de licencia" x-bind:disabled="tipo !== 'licencia' ">
 
-            <div>
-                <label>Fecha inicio</label>
-                <input type="date" name="licencia_fecha_inicio" class="form-control" x-bind:disabled="tipo !== 'licencia'">
-            </div>
+            <input type="text" name="tipo_licencia" placeholder="Tipo de licencia" x-bind:disabled="tipo !== 'licencia'">
 
-            <div>
-                <label>Fecha fin</label>
-                <input type="date" name="licencia_fecha_fin" class="form-control" x-bind:disabled="tipo !== 'licencia'">
-            </div>
+            <input type="number" name="numero_usuarios" placeholder="Número de usuarios" x-bind:disabled="tipo !== 'licencia'">
+
+            <input type="number" step="0.01" name="costo_renovacion" placeholder="Costo renovación" x-bind:disabled="tipo !== 'licencia'">
+
+            <input type="date" name="fecha_inicio" x-bind:disabled="tipo !== 'licencia'">
+            <input type="date" name="fecha_fin" x-bind:disabled="tipo !== 'licencia'">
         </div>
 
         <br><br>
@@ -184,10 +203,52 @@
     </div>
 </form>
 <script>
-function pedidoForm() {
-    return {
-        tipo: '{{ old('tipo') }}'
+    function pedidoForm() {
+        return {
+            tipo: '{{ old('tipo') }}'
+        }
     }
-}
+
+    function abrirModalCliente() {
+        document.getElementById('modalCliente').style.display = 'block';
+    }
+
+    function cerrarModalCliente() {
+        document.getElementById('modalCliente').style.display = 'none';
+    }
+
+    function guardarCliente() {
+
+        fetch('/clientes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                departamento: document.getElementById('nuevo_departamento').value,
+                contacto: document.getElementById('nuevo_contacto').value,
+                telefono: document.getElementById('nuevo_telefono').value,
+                email: document.getElementById('nuevo_email').value,
+                direccion: document.getElementById('nuevo_direccion').value,
+            })
+        })
+        .then(res => res.json())
+        .then(cliente => {
+
+            let select = document.getElementById('clienteSelect');
+
+            let option = document.createElement('option');
+            option.value = cliente.id;
+            option.text = cliente.departamento;
+
+            select.appendChild(option);
+            select.value = cliente.id;
+
+            cerrarModalCliente();
+        });
+    }
+
 </script>
+
 @endsection

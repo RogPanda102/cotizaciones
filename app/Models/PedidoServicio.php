@@ -10,6 +10,10 @@ class PedidoServicio extends Model
     protected $fillable = [
         'pedido_id',
         'descripcion_servicio',
+        'alcance',
+        'responsable',
+        'entregables',
+        'observaciones',
         'fecha_inicio',
         'fecha_fin',
     ];

@@ -39,9 +39,10 @@ class PedidoController extends Controller
         $dependencias = Dependencia::all();
         $empresas = Empresa::all();
         $proveedores = Proveedor::all();
+        $clientes = Cliente::all();
         $empresaId = request('empresa_id');
 
-        return view('pedidos.create', compact('requisiciones', 'dependencias', 'empresas', 'proveedores', 'empresaId'));
+        return view('pedidos.create', compact('requisiciones', 'dependencias', 'empresas', 'proveedores', 'clientes', 'empresaId'));
     }
 
     /**
@@ -49,7 +50,7 @@ class PedidoController extends Controller
      */
     public function store(StorePedidoRequest $request)
     {
-        
+        //dd($request->all());
         $pedido = $this->pedidoService->crearPedido(
             $request->validated()
         );

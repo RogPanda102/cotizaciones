@@ -10,6 +10,9 @@ class PedidoLicencia extends Model
     protected $fillable = [
         'pedido_id',
         'nombre_licencia',
+        'tipo_licencia',
+        'numero_usuarios',
+        'costo_renovacion',
         'fecha_inicio',
         'fecha_fin',
     ];

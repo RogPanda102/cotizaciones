@@ -75,61 +75,61 @@ ${{ number_format($pedido->totalGastado(), 2) }}
 
 <h5>Agregar compra</h5>
 
-<form action="{{ route('compras.store') }}" method="POST">
+    <form action="{{ route('compras.store') }}" method="POST">
 
-@csrf
+        @csrf
 
-<input type="hidden" name="pedido_id" value="{{ $pedido->id }}">
+        <input type="hidden" name="pedido_id" value="{{ $pedido->id }}">
 
-<div>
+        <div>
 
-<label>Fecha</label>
-<input type="date" name="fecha" class="form-control" required>
+            <label>Fecha</label>
+            <input type="date" name="fecha" class="form-control" required>
 
-</div>
+        </div>
 
-<div>
+        <div>
 
-<label>Cantidad</label>
-<input type="number" name="cantidad" min="1" class="form-control" required>
+            <label>Cantidad</label>
+            <input type="number" name="cantidad" min="1" class="form-control" required>
 
-</div>
+        </div>
 
-<div>
+        <div>
 
-<label>Unidad</label>
-<input type="text" name="unidad" class="form-control" required>
+            <label>Unidad</label>
+            <input type="text" name="unidad" class="form-control" required>
 
-</div>
+        </div>
 
-<div class="mb-3">
+        <div class="mb-3">
 
-<label>Descripción</label>
+            <label>Descripción</label>
 
-<input type="text" name="descripcion" class="form-control" required>
+            <input type="text" name="descripcion" class="form-control" required>
 
-</div>
+        </div>
 
-<div class="mb-3">
+        <div class="mb-3">
 
-<label>Monto</label>
+            <label>Monto</label>
 
-<input type="number" step="0.01" name="monto" class="form-control" required>
+            <input type="number" step="0.01" name="monto" class="form-control" required>
 
-</div>
+        </div>
 
-<div class="mb-3">
+        <div class="mb-3">
 
-<label>Proveedor</label>
+            <label>Proveedor</label>
 
-<input type="text" name="proveedor" class="form-control" required>
+            <input type="text" name="proveedor" class="form-control" required>
 
-</div>
+        </div>
 
-<button class="btn btn-primary">
-Guardar compra
-</button>
+        <button class="btn btn-primary">
+            Guardar compra
+        </button>
 
-</form>
+    </form>
 
 @endif

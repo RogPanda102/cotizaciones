@@ -80,11 +80,27 @@
 <body>
 
 <header>
-    <nav>
-        <a href="{{ route('requisiciones.index') }}">Requisiciones</a>
-        <a href="{{ route('dependencias.index') }}">Dependencias</a>
-        <a href="{{ route('proveedores.index') }}">Proveedores</a>
-    </nav>
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+
+        <!-- LOGO -->
+        <a href="{{ route('empresas.index') }}" style="display: flex; align-items: center;">
+            <img 
+                src="{{ asset('images/logo-header-2.png') }}" 
+                alt="Inicio"
+                style="height: 40px; margin-right: 20px; cursor: pointer; transition: 0.2s;"
+                onmouseover="this.style.transform='scale(1.1)'"
+                onmouseout="this.style.transform='scale(1)'"
+            >
+        </a>
+
+        <!-- NAV -->
+        <nav>
+            <a href="{{ route('requisiciones.index') }}">Requisiciones</a>
+            <a href="{{ route('dependencias.index') }}">Dependencias</a>
+            <a href="{{ route('proveedores.index') }}">Proveedores</a>
+        </nav>
+
+    </div>
 </header>
 
 <div class="container">

@@ -16,21 +16,30 @@ class PedidoService
     {
         return DB::transaction(function () use ($data) {
 
-            // Crear cliente
-            $cliente = Cliente::create([
-                'departamento' => $data['departamento_cliente'],
-                'contacto' => $data['contacto_cliente'] ?? null,
-                'telefono' => $data['telefono_cliente'] ?? null,
-                'email' => $data['email_cliente'] ?? null,
-                'direccion' => $data['direccion_cliente'] ?? null,
-            ]);
-
+            // Validación de seguridad (opcional pero pro)
+            if (empty($data['cliente_id'])) {
+                throw new \Exception('Debe seleccionar o crear un cliente.');
+            }
             // asignar cliente al pedido
-            $data['cliente_id'] = $cliente->id;
         
             $data['estado'] = EstadoPedido::EN_PROCESO;
 
-            $pedido = Pedido::create($data);
+            $pedidoData = collect($data)->only([
+                'requisicion_id',
+                'dependencia_id',
+                'empresa_id',
+                'cliente_id',
+                'proveedor_id',
+                'monto_total_aprobado',
+                'fecha_adjudicacion',
+                'dias_entrega',
+                'tipo_dias',
+                'dias_credito',
+                'tipo',
+                'estado'
+            ])->toArray();
+
+            $pedido = Pedido::create($pedidoData);
 
             $pedido->historialEstados()->create([
                 'estado' => $pedido->estado
@@ -60,8 +69,12 @@ class PedidoService
         PedidoServicio::create([
             'pedido_id' => $pedido->id,
             'descripcion_servicio' => $data['descripcion_servicio'] ?? null,
-            'fecha_inicio' => $data['servicio_fecha_inicio'] ?? null,
-            'fecha_fin' => $data['servicio_fecha_fin'] ?? null,
+            'alcance' => $data['alcance'] ?? null,
+            'responsable' => $data['responsable'] ?? null,
+            'entregables' => $data['entregables'] ?? null,
+            'observaciones' => $data['observaciones'] ?? null,
+            'fecha_inicio' => $data['fecha_inicio'] ?? null,
+            'fecha_fin' => $data['fecha_fin'] ?? null,
         ]);
     }
 
@@ -70,8 +83,11 @@ class PedidoService
         PedidoLicencia::create([
             'pedido_id' => $pedido->id,
             'nombre_licencia' => $data['nombre_licencia'] ?? null,
-            'fecha_inicio' => $data['licencia_fecha_inicio'] ?? null,
-            'fecha_fin' => $data['licencia_fecha_fin'] ?? null,
+            'tipo_licencia' => $data['tipo_licencia'] ?? null,
+            'numero_usuarios' => $data['numero_usuarios'] ?? null,
+            'costo_renovacion' => $data['costo_renovacion'] ?? null,
+            'fecha_inicio' => $data['fecha_inicio'] ?? null,
+            'fecha_fin' => $data['fecha_fin'] ?? null,
         ]);
     }
 

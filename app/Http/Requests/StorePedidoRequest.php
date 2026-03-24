@@ -15,16 +15,17 @@ class StorePedidoRequest extends FormRequest
     {
         return true;
     }
-
+    
     
     public function rules(): array
     {
+        $tipo = $this->input('tipo');
         $rules = [
             'requisicion_id' => 'required|exists:requisiciones,id',
             'dependencia_id' => 'required|exists:dependencias,id',
             'empresa_id' => 'required|exists:empresas,id',
-            'cliente_id' => 'nullable|exists:clientes,id',
-            'proveedor_id' => 'required|exists:proveedores,id',
+            'cliente_id' => 'required|exists:clientes,id',
+            'proveedor_id' => 'nullable|exists:proveedores,id',
 
             'monto_total_aprobado' => 'required|numeric|min:0',
             'fecha_adjudicacion' => 'required|date',
@@ -34,24 +35,33 @@ class StorePedidoRequest extends FormRequest
 
             'tipo' => 'required|in:servicio,licencia,mercadeo',
 
-            'departamento_cliente' => 'required|string|max:255',
-            'contacto_cliente' => 'nullable|string|max:255',
-            'telefono_cliente' => 'nullable|string|max:50',
-            'email_cliente' => 'nullable|email|max:255',
-            'direccion_cliente' => 'nullable|string|max:255',
+            //'telefono_cliente' => 'nullable|string|max:50',
+            //'email_cliente' => 'nullable|email|max:255',
+            //'direccion_cliente' => 'nullable|string|max:255',
         ];
 
         // Reglas dinámicas
-        if ($this->tipo === 'servicio') {
-            $rules['descripcion_servicio'] = 'required|string';
-            $rules['servicio_fecha_inicio'] = 'required|date';
-            $rules['servicio_fecha_fin'] = 'required|date|after_or_equal:servicio_fecha_inicio';
+        if ($tipo === 'licencia') {
+            $rules = array_merge($rules, [
+                'nombre_licencia' => 'required|string|max:255',
+                'tipo_licencia' => 'nullable|string|max:100',
+                'numero_usuarios' => 'nullable|integer|min:1',
+                'costo_renovacion' => 'nullable|numeric|min:0',
+                'fecha_inicio' => 'required|date',
+                'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
+            ]);
         }
 
-        if ($this->tipo === 'licencia') {
-            $rules['nombre_licencia'] = 'required|string';
-            $rules['licencia_fecha_inicio'] = 'required|date';
-            $rules['licencia_fecha_fin'] = 'required|date|after_or_equal:licencia_fecha_inicio';
+        if ($tipo === 'servicio') {
+            $rules = array_merge($rules, [
+                'descripcion_servicio' => 'required|string',
+                'alcance' => 'nullable|string',
+                'responsable' => 'nullable|string|max:255',
+                'entregables' => 'nullable|string',
+                'observaciones' => 'nullable|string',
+                'fecha_inicio' => 'required|date',
+                'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
+            ]);
         }
 
         return $rules;
