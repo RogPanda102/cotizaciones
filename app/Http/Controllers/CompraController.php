@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Pedido;
 use App\Models\Compra;
+use App\Models\Proveedor;
 use App\Http\Requests\StoreCompraRequest;
 use App\Http\Requests\UpdateCompraRequest;
 
@@ -55,9 +56,11 @@ class CompraController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Compra $compra)
     {
-        //
+            $proveedores = Proveedor::all();
+
+            return view('compras.edit', compact('compra', 'proveedores'));
     }
 
     /**

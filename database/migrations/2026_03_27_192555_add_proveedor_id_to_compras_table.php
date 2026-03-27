@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('pedido_servicios', function (Blueprint $table) {
-            $table->decimal('costo_servicio', 10, 2)->nullable();
+        Schema::table('compras', function (Blueprint $table) {
+            $table->foreign('proveedor_id')
+                ->references('id')
+                ->on('proveedores')
+                ->nullOnDelete();
         });
     }
 
@@ -21,7 +24,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('pedido_servicios', function (Blueprint $table) {
+        Schema::table('compras', function (Blueprint $table) {
             //
         });
     }

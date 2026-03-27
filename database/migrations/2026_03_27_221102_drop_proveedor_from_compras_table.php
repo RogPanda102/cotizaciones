@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('pedido_licencias', function (Blueprint $table) {
-            $table->decimal('costo_licencia', 10, 2)->nullable();
+        Schema::table('compras', function (Blueprint $table) {
+            $table->dropColumn('proveedor');
         });
     }
 
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('pedido_licencias', function (Blueprint $table) {
+        Schema::table('compras', function (Blueprint $table) {
             //
         });
     }

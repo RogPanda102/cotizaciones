@@ -11,7 +11,7 @@ class Compra extends Model
         'fecha',
         'cantidad',
         'unidad',
-        'proveedor',
+        'proveedor_id',
         'descripcion',
         'monto',
     ];
@@ -23,6 +23,11 @@ class Compra extends Model
     public function pedido()
     {
         return $this->belongsTo(Pedido::class);
+    }
+
+    public function proveedor()
+    {
+        return $this->belongsTo(Proveedor::class);
     }
 
     public function total()

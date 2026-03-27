@@ -64,9 +64,11 @@ class PedidoController extends Controller
      */
     public function show(Pedido $pedido)
     {
-        $pedido->load(['compras', 'historialEstados']);
+        $pedido->load(['compras.proveedor', 'historialEstados']);
 
-        return view('pedidos.show', compact('pedido'));
+        $proveedores = Proveedor::all();
+
+        return view('pedidos.show', compact('pedido', 'proveedores'));
     }
 
     /**

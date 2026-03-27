@@ -24,7 +24,7 @@
 
 <td>{{ $compra->unidad }}</td>
 
-<td>{{ $compra->proveedor }}</td>
+<td>{{ $compra->proveedor->empresa }}</td>
 
 <td>{{ $compra->descripcion }}</td>
 
@@ -32,20 +32,22 @@
 
 @if($pedido->estado->noEsFinal())
 
-<a href="{{ route('compras.edit', $compra->id) }}">
+<a href="{{ route('compras.edit', $compra->id) }}" 
+onclick="event.preventDefault(); confirmEdit('{{ route('compras.edit', $compra->id) }}')">
 Editar
 </a>
 
-<form action="{{ route('compras.destroy', $compra->id) }}"
-method="POST"
-style="display:inline;">
-@csrf
-@method('DELETE')
+<form id="delete-form-{{ $compra->id }}"
+    action="{{ route('compras.destroy', $compra->id) }}"
+    method="POST" style="display:inline;">
+    @csrf
+    @method('DELETE')
 
-<button type="submit">
-Eliminar
-</button>
-
+    <button type="button"
+        class="btn btn-danger btn-sm"
+        onclick="confirmDelete({{ $compra->id }})">
+        Eliminar
+    </button>
 </form>
 
 @endif
@@ -122,7 +124,14 @@ ${{ number_format($pedido->totalGastado(), 2) }}
 
             <label>Proveedor</label>
 
-            <input type="text" name="proveedor" class="form-control" required>
+            <select name="proveedor_id" id="" class="form-control" required>
+                <option value="">Seleccione proveedor</option>
+                @foreach($proveedores as $proveedor)
+                    <option value="{{ $proveedor->id }}">
+                        {{ $proveedor->empresa }}
+                    </option>
+                @endforeach
+            </select>
 
         </div>
 
@@ -131,5 +140,36 @@ ${{ number_format($pedido->totalGastado(), 2) }}
         </button>
 
     </form>
-
+<script>
+function confirmDelete(id) {
+    Swal.fire({
+        title: '¿Eliminar compra?',
+        text: "Esta acción no se puede deshacer",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('delete-form-' + id).submit();
+        }
+    });
+}
+function confirmEdit(url) {
+    Swal.fire({
+        title: '¿Editar compra?',
+        text: "Podrás modificar los datos",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, editar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = url;
+        }
+    });
+}
+</script>
 @endif

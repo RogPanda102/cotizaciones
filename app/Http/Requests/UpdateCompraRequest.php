@@ -17,12 +17,12 @@ class UpdateCompraRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'proveedor' => 'required|string|max:255',
             'fecha' => 'required|date',
             'cantidad' => 'required|numeric|min:1',
             'unidad' => 'required|string|max:50',
             'descripcion' => 'required|string|max:1000',
             'monto' => 'required|numeric|min:0',
+            'proveedor_id' => 'required|exists:proveedores,id',
         ];
     }
 }

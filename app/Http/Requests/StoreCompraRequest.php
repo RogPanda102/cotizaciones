@@ -18,7 +18,7 @@ class StoreCompraRequest extends FormRequest
     {
         return [
             'pedido_id' => 'required|exists:pedidos,id',
-            'proveedor' => 'required|string|max:255',
+            'proveedor_id' => 'required|exists:proveedores,id',
             'fecha' => 'required|date',
             'cantidad' => 'required|integer|min:1',
             'unidad' => 'required|string|max:50',
