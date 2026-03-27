@@ -93,32 +93,48 @@
 
         <ul class="nav nav-tabs" id="pedidoTabs" role="tablist">
 
-            <li class="nav-item">
-                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#info">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button">
                 Info general
                 </button>
             </li>
 
-            <li class="nav-item">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#finanzas">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="contacto-tab" data-bs-toggle="tab" data-bs-target="#contacto" type="button">
+                    Contacto
+                </button>
+            </li>
+
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="finanzas-tab" data-bs-toggle="tab" data-bs-target="#finanzas" type="button">
                 Finanzas
                 </button>
             </li>
 
-            <li class="nav-item">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#plazos">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="plazos-tab" data-bs-toggle="tab" data-bs-target="#plazos" type="button">
                 Plazos
                 </button>
             </li>
 
-            <li class="nav-item">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#compras">
-                Compras
-                </button>
-            </li>
+            @if(in_array($pedido->tipo, ['servicio', 'licencia']))
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="detalles-tab" data-bs-toggle="tab" data-bs-target="#detalles" type="button">
+                        Detalles
+                    </button>
+                </li>
+            @endif
 
-            <li class="nav-item">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#acciones">
+            @if($pedido->tipo === 'mercadeo')
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="compras-tab" data-bs-toggle="tab" data-bs-target="#compras" type="button">
+                    Compras
+                    </button>
+                </li>
+            @endif
+
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="acciones-tab" data-bs-toggle="tab" data-bs-target="#acciones" type="button">
                 Acciones
                 </button>
             </li>
@@ -126,25 +142,37 @@
         </ul>
 
 
-        <div class="tab-content mt-4">
+        <div class="tab-content mt-4" id="pedidoTabsContent">
 
-            <div class="tab-pane fade show active" id="info">
+            <div class="tab-pane fade show active" id="info" role="tabpanel">
             @include('pedidos.tabs.info-general')
             </div>
 
-            <div class="tab-pane fade" id="finanzas">
+            <div class="tab-pane fade" id="contacto" role="tabpanel">
+                @include('pedidos.tabs.contacto')
+            </div>
+
+            <div class="tab-pane fade" id="finanzas" role="tabpanel">
             @include('pedidos.tabs.finanzas')
             </div>
 
-            <div class="tab-pane fade" id="plazos">
+            <div class="tab-pane fade" id="plazos" role="tabpanel">
             @include('pedidos.tabs.plazos')
             </div>
 
-            <div class="tab-pane fade" id="compras">
-            @include('pedidos.tabs.compras')
-            </div>
+            @if(in_array($pedido->tipo, ['servicio', 'licencia']))
+                <div class="tab-pane fade" id="detalles" role="tabpanel">
+                    @include('pedidos.tabs.detalles')
+                </div>
+            @endif
 
-            <div class="tab-pane fade" id="acciones">
+            @if($pedido->tipo === 'mercadeo')
+                <div class="tab-pane fade" id="compras" role="tabpanel">
+                    @include('pedidos.tabs.compras')
+                </div>
+            @endif
+
+            <div class="tab-pane fade" id="acciones" role="tabpanel">
             @include('pedidos.tabs.acciones')
             </div>
 

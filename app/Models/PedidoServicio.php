@@ -14,20 +14,18 @@ class PedidoServicio extends Model
         'responsable',
         'entregables',
         'observaciones',
+        'costo_servicio',
         'fecha_inicio',
         'fecha_fin',
+    ];
+
+    protected $casts = [
+        'fecha_inicio' => 'date',
+        'fecha_fin' => 'date',
     ];
 
     public function pedido()
     {
         return $this->belongsTo(Pedido::class);
-    }
-
-    // 🔥 cálculo útil
-    public function getDiasRestantesAttribute()
-    {
-        if (!$this->fecha_fin) return null;
-
-        return Carbon::now()->diffInDays($this->fecha_fin, false);
     }
 }

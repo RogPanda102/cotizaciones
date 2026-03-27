@@ -110,6 +110,8 @@
 
             <textarea name="observaciones" placeholder="Observaciones" x-bind:disabled="tipo !== 'servicio'"></textarea>
 
+            <input type="number" step="0.01" name="costo_servicio" placeholder="Costo Servicio" x-bind:disabled="tipo !== 'servicio'">
+
             <input type="date" name="fecha_inicio" x-bind:disabled="tipo !== 'servicio'">
             <input type="date" name="fecha_fin" x-bind:disabled="tipo !== 'servicio'">
         </div>
@@ -124,6 +126,8 @@
             <input type="text" name="tipo_licencia" placeholder="Tipo de licencia" x-bind:disabled="tipo !== 'licencia'">
 
             <input type="number" name="numero_usuarios" placeholder="Número de usuarios" x-bind:disabled="tipo !== 'licencia'">
+
+            <input type="number" name="costo_licencia" step="0.01" placeholder="Costo Licencia(s)" x-bind:disabled="tipo !== 'licencia'">
 
             <input type="number" step="0.01" name="costo_renovacion" placeholder="Costo renovación" x-bind:disabled="tipo !== 'licencia'">
 

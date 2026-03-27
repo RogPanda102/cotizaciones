@@ -1,35 +1,67 @@
-<div class="card">
-<div class="card-body">
+<div class="row">
 
-<p>
-<strong>Requisición:</strong>
-{{ $pedido->requisicion->folio_externo }}
-</p>
+    {{-- IDENTIFICACIÓN --}}
+    <div class="col-md-6 mb-3">
+        <div class="card h-100">
+            <div class="card-header">
+                Identificación
+            </div>
 
-<p>
-<strong>Dependencia:</strong>
-{{ $pedido->dependencia->nombre }}
-</p>
+            <div class="card-body">
 
-<p>
-<strong>Estado:</strong>
-{{ $pedido->estado->label() }}
-</p>
+                <p>
+                    <strong>Requisición:</strong><br>
+                    {{ $pedido->requisicion->folio_externo ?? '—' }}
+                </p>
 
-<p>
-<strong>Tipo de días:</strong>
-{{ ucfirst($pedido->tipo_dias) }}
-</p>
+                <p>
+                    <strong>Dependencia:</strong><br>
+                    {{ $pedido->dependencia->nombre ?? '—' }}
+                </p>
 
-<p>
-<strong>Días de entrega:</strong>
-{{ $pedido->dias_entrega }}
-</p>
+            </div>
+        </div>
+    </div>
 
-<p>
-<strong>Días de crédito:</strong>
-{{ $pedido->dias_credito }}
-</p>
+    {{-- OPERACIÓN --}}
+    <div class="col-md-6 mb-3">
+        <div class="card h-100">
+            <div class="card-header">
+                Operación
+            </div>
 
-</div>
+            <div class="card-body">
+
+                <p>
+                    <strong>Tipo de días:</strong><br>
+                    {{ ucfirst($pedido->tipo_dias) }}
+                </p>
+
+                <p class="mb-0">
+                    <strong>Días de entrega:</strong><br>
+                    {{ $pedido->dias_entrega ?? '—' }}
+                </p>
+
+            </div>
+        </div>
+    </div>
+
+    {{-- CONDICIONES --}}
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                Condiciones
+            </div>
+
+            <div class="card-body">
+
+                <p class="mb-0">
+                    <strong>Días de crédito:</strong><br>
+                    {{ $pedido->dias_credito ?? '—' }}
+                </p>
+
+            </div>
+        </div>
+    </div>
+
 </div>

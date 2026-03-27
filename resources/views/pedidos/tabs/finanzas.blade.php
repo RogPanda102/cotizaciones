@@ -1,34 +1,49 @@
 <div class="card">
-<div class="card-body">
+    <div class="card-body">
 
-<p>
-<strong>Monto aprobado:</strong>
-${{ number_format($pedido->monto_total_aprobado, 2) }}
-</p>
+        <h6 class="mb-3">Resumen financiero</h6>
 
-<p>
-<strong>Total gastado:</strong>
-${{ number_format($pedido->totalGastado(), 2) }}
-</p>
+        <div class="row mb-3">
 
-<p>
-<strong>Resultado:</strong>
+            <div class="col-md-6">
+                <p class="mb-2">
+                    <strong>Monto aprobado:</strong><br>
+                    ${{ number_format($pedido->monto_total_aprobado, 2) }}
+                </p>
+            </div>
 
-@if($pedido->tienePerdida())
+            <div class="col-md-6">
+                <p class="mb-2">
+                    <strong>Total gastado:</strong><br>
+                    ${{ number_format($pedido->costo_real, 2) }}
+                </p>
+            </div>
 
-<span class="text-danger">
-${{ number_format($pedido->utilidad(), 2) }} (Pérdida)
-</span>
+        </div>
 
-@else
+        <hr>
 
-<span class="text-success">
-${{ number_format($pedido->utilidad(), 2) }} (Ganancia)
-</span>
+        <h6 class="mb-3">Resultado</h6>
 
-@endif
+        @if($pedido->resultado_tipo === 'perdida')
 
-</p>
+            <span class="badge bg-danger">
+                Pérdida: ${{ number_format($pedido->resultado, 2) }}
+            </span>
 
-</div>
+        @elseif($pedido->resultado_tipo === 'ganancia')
+
+            <span class="badge bg-success">
+                Ganancia: ${{ number_format($pedido->resultado, 2) }}
+            </span>
+
+        @else
+
+            <span class="badge bg-secondary">
+                Equilibrio: ${{ number_format($pedido->resultado, 2) }}
+            </span>
+
+        @endif
+
+    </div>
 </div>

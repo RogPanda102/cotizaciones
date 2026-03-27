@@ -51,12 +51,27 @@
         <tr class="{{ $clase }}">
             <td>{{ $pedido->requisicion->folio_externo }}</td>
             <td>{{ $pedido->dependencia->nombre }}</td>
-            <td>${{ number_format($pedido->monto_total_aprobado, 2) }}</td>
+            <td>
+                ${{ number_format($pedido->monto_total_aprobado, 2) }}
+                @if($pedido->resultado_tipo === 'perdida')
+                    <span title="Pérdida">🔴</span>
+                @elseif($pedido->resultado_tipo === 'ganancia')
+                    <span title="Ganancia">🟢</span>
+                @else
+                    <span title="Equilibrio">⚪</span>
+                @endif
+            </td>
 
 
             <td>
                 <span class="badge bg-{{ $pedido->estado->badge() }}">
                     {{ $pedido->estado->label() }}
+                </span>
+
+                <br>
+
+                <span class="badge bg-secondary">
+                    {{ ucfirst($pedido->tipo) }}
                 </span>
             </td>
 

@@ -76,7 +76,7 @@ class Pedido extends Model
     {
         return $this->hasOne(PedidoLicencia::class);
     }
-
+    // Relacion para historial de estados
     public function historialEstados()
     {
         return $this->hasMany(PedidoEstado::class)->orderBy('created_at');
@@ -85,9 +85,18 @@ class Pedido extends Model
     // Total gastado en compras
     public function totalGastado()
     {
-        return $this->compras->sum(function ($compra) {
-            return $compra->cantidad * $compra->monto;
-        });
+        return match($this->tipo) {
+
+            'mercadeo' => $this->compras->sum(function ($compra) {
+                return $compra->cantidad * $compra->monto;
+            }),
+
+            'servicio' => $this->servicio->costo_servicio ?? 0,
+
+            'licencia' => $this->licencia->costo_licencia ?? 0,
+
+            default => 0,
+        };
     }
 
     // Utilidad del pedido, calcula si hay ganancia
@@ -156,8 +165,8 @@ class Pedido extends Model
             }
         });
     }
-
-    public function getDiasRestantesAttribute()
+    // Método para calcular los dias restantes para la entrega en compras
+    public function getDiasRestantesEntregaAttribute()
     {
         if ($this->estado->esFinal()) {
         return null;
@@ -172,6 +181,29 @@ class Pedido extends Model
 
         return (int) $hoy->diffInDays($entrega, false);
     }
+    // Método para calcular los dias restantes para la licencia
+    public function getDiasRestantesLicenciaAttribute()
+    {
+        if (!$this->licencia || !$this->licencia->fecha_fin) {
+            return null;
+        }
+
+        $hoy = now()->copy()->startOfDay();
+        $fin = $this->licencia->fecha_fin->copy()->startOfDay();
+
+        return (int) $hoy->diffInDays($fin, false);
+    }
+
+    public function getEstadoLicenciaAttribute()
+    {
+        if (!$this->licencia || !$this->licencia->fecha_fin) {
+            return null;
+        }
+
+        return now()->greaterThan($this->licencia->fecha_fin)
+            ? 'vencido'
+            : 'vigente';
+    }
 
     public function fechaEntregaReal()
     {
@@ -180,5 +212,35 @@ class Pedido extends Model
             ->first();
 
         return $estado?->created_at;
+    }
+    // Costo real del pedido, basado en su tipo
+    public function getCostoRealAttribute()
+    {
+        return match($this->tipo) {
+            'mercadeo' => $this->compras->sum('monto'),
+            'servicio' => $this->servicio?->costo_servicio ?? 0,
+            'licencia' => $this->licencia?->costo_licencia ?? 0,
+            default => 0
+        };
+    }
+
+    public function getResultadoAttribute()
+    {
+        return $this->monto_total_aprobado - $this->costo_real;
+    }
+
+    public function getResultadoTipoAttribute()
+    {
+        if ($this->resultado > 0) return 'ganancia';
+        if ($this->resultado < 0) return 'perdida';
+        return 'equilibrio';
+    }
+    // funcion para que dias restantes funcione en todo el codigo
+    public function getDiasRestantesAttribute()
+    {
+        return match($this->tipo) {
+            'licencia' => $this->dias_restantes_licencia,
+            default => $this->dias_restantes_entrega,
+        };
     }
 }

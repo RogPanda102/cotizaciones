@@ -12,20 +12,19 @@ class PedidoLicencia extends Model
         'nombre_licencia',
         'tipo_licencia',
         'numero_usuarios',
+        'costo_licencia',
         'costo_renovacion',
         'fecha_inicio',
         'fecha_fin',
     ];
 
+    protected $casts = [
+        'fecha_inicio' => 'date',
+        'fecha_fin' => 'date',
+    ];
+
     public function pedido()
     {
         return $this->belongsTo(Pedido::class);
-    }
-
-    public function getDiasRestantesAttribute()
-    {
-        if (!$this->fecha_fin) return null;
-
-        return Carbon::now()->diffInDays($this->fecha_fin, false);
     }
 }
