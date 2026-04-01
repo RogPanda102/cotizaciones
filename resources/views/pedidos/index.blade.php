@@ -86,16 +86,19 @@
 
             <td>
                 <a href="{{ route('pedidos.show', $pedido->id) }}">
-                    Ver
+                    <button class="btn btn-sm btn-primary">
+                        Ver
+                    </button>
                 </a>
 
-                <form action="{{ route('pedidos.destroy', $pedido->id) }}" 
-                      method="POST" 
-                      style="display:inline;"
-                      onsubmit="return confirm('¿Seguro que deseas eliminar este pedido?')">
+                <form 
+                    id="delete-form-{{ $pedido->id }}"
+                    action="{{ route('pedidos.destroy', $pedido->id) }}" 
+                    method="POST"
+                    style="display: inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-sm btn-danger">
+                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ $pedido->id }})">
                         Eliminar
                     </button>
                 </form>
@@ -106,4 +109,27 @@
 <div style="margin-top: 20px;">
     {{ $pedidos->links() }}
 </div>
+<script>
+    function confirmDelete(id) {
+        Swal.fire({
+            title: '¿Eliminar pedido?',
+            text: "Esta acción no se puede deshacer",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let form = document.getElementById('delete-form-' + id);
+                if (form) {
+                    form.submit();
+                } else {
+                    console.error('Form no encontrado');
+                }
+            }
+        });
+    }
+</script>
 @endsection

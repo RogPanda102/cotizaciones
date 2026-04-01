@@ -53,4 +53,12 @@ enum EstadoPedido: string
     {
         return $this === self::FACTURADO;
     }
+    public function bloqueaCompras(): bool
+    {
+        return in_array($this, [
+            self::FACTURADO,
+            self::ENTREGADO,
+            self::PAGADO
+        ]);
+    }
 }

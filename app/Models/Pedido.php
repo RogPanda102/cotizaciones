@@ -82,7 +82,7 @@ class Pedido extends Model
         return $this->hasMany(PedidoEstado::class)->orderBy('created_at');
     }
 
-    // Total gastado en compras
+    // Total gastado en compras | resultado para pedidos/tabs/compras
     public function totalGastado()
     {
         return match($this->tipo) {
@@ -213,11 +213,11 @@ class Pedido extends Model
 
         return $estado?->created_at;
     }
-    // Costo real del pedido, basado en su tipo
+    // Costo real del pedido, basado en su tipo | resultado para pedidos/tabs/finanzas
     public function getCostoRealAttribute()
     {
         return match($this->tipo) {
-            'mercadeo' => $this->compras->sum('monto'),
+            'mercadeo' => $this->compras->sum('total'),
             'servicio' => $this->servicio?->costo_servicio ?? 0,
             'licencia' => $this->licencia?->costo_licencia ?? 0,
             default => 0
@@ -242,5 +242,35 @@ class Pedido extends Model
             'licencia' => $this->dias_restantes_licencia,
             default => $this->dias_restantes_entrega,
         };
+    }
+    // función por tipo que muestra el resultado formateado para pedidos/tabs/finanzas
+    public function getResultadoFormateadoAttribute()
+    {
+        if ($this->estado !== \App\Enums\EstadoPedido::PAGADO) {
+            return [
+                'texto' => 'Pendiente',
+                'tipo' => 'pendiente',
+                'color' => 'secondary'
+            ];
+        }
+
+        return [
+            'texto' => '$' . number_format($this->resultado, 2),
+            'tipo' => $this->resultado_tipo,
+            'color' => match($this->resultado_tipo) {
+                'ganancia' => 'success',
+                'perdida' => 'danger',
+                default => 'secondary'
+            }
+        ];
+    }
+    // Funcion para bloquear las compras en mercadeo si el estado no es en proceso
+    public function puedeEditarCompras(): bool
+    {
+        if ($this->tipo === 'mercadeo') {
+            return !$this->estado->bloqueaCompras();
+        }
+
+        return true;
     }
 }

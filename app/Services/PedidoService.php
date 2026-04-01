@@ -98,6 +98,10 @@ class PedidoService
         $nuevoEstado = EstadoPedido::from($data['estado']);
         $estadoActual = $pedido->estado;
 
+        if (!$pedido->puedeEditarCompras()) {
+            throw new \Exception('Las compras están bloqueadas para este pedido.');
+        }
+
         if ($estadoActual->esFinal()) {
             throw new \Exception('El pedido ya está pagado y no puede modificarse.');
         }

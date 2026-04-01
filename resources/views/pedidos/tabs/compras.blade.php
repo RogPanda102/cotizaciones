@@ -71,7 +71,10 @@ ${{ number_format($pedido->totalGastado(), 2) }}
 
 </div>
 
-@if($pedido->estado->noEsFinal())
+@if(!$pedido->puedeEditarCompras())
+    <div class="alert alert-warning">
+        Las compras están bloqueadas porque el pedido ya fue facturado o posterior.
+    </div>
 
 <hr>
 

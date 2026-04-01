@@ -30,7 +30,7 @@ class Compra extends Model
         return $this->belongsTo(Proveedor::class);
     }
 
-    public function total()
+    public function getTotalAttribute()
     {
         return $this->cantidad * $this->monto;
     }

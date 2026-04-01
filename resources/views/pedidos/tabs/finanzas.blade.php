@@ -25,25 +25,11 @@
 
         <h6 class="mb-3">Resultado</h6>
 
-        @if($pedido->resultado_tipo === 'perdida')
+        @php $res = $pedido->resultado_formateado; @endphp
 
-            <span class="badge bg-danger">
-                Pérdida: ${{ number_format($pedido->resultado, 2) }}
-            </span>
-
-        @elseif($pedido->resultado_tipo === 'ganancia')
-
-            <span class="badge bg-success">
-                Ganancia: ${{ number_format($pedido->resultado, 2) }}
-            </span>
-
-        @else
-
-            <span class="badge bg-secondary">
-                Equilibrio: ${{ number_format($pedido->resultado, 2) }}
-            </span>
-
-        @endif
+        <span class="badge bg-{{ $res['color'] }}">
+            {{ $res['texto'] }}
+        </span>
 
     </div>
 </div>

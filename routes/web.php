@@ -33,3 +33,16 @@ Route::post('/clientes', function (Request $request) {
 
     return response()->json($cliente);
 });
+Route::get('/clientes/buscar', function (Request $request) {
+    $query = Cliente::query();
+
+    if ($request->email) {
+        $query->where('email', $request->email);
+    }
+
+    if ($request->telefono) {
+        $query->orWhere('telefono', $request->telefono);
+    }
+
+    return response()->json($query->first());
+});

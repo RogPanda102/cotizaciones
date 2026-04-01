@@ -8,7 +8,7 @@
 
     <h4>Cambiar estado</h4>
 
-    <form action="{{ route('pedidos.update', $pedido->id) }}" method="POST">
+    <form id="update-form-{{ $pedido->id }}" action="{{ route('pedidos.update', $pedido->id) }}" method="POST">
 
         @csrf
         @method('PUT')
@@ -49,7 +49,7 @@
 
 
 
-        <button class="btn btn-primary">
+        <button type="button" class="btn btn-primary" onclick="confirmUpdate({{ $pedido->id }})">
         Actualizar
         </button>
     </form>
@@ -77,6 +77,27 @@
             toggleFechaFacturacion();
 
         });
+
+        function confirmUpdate(id) {
+            const estado = document.getElementById('estadoSelect').value;
+            Swal.fire({
+                title: '¿Actualizar estado?',
+                text: `El pedido pasará a: ${estado}`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#0d6efd',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Sí, actualizar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let form = document.getElementById('update-form-' + id);
+                    if (form) {
+                        form.submit();
+                    }
+                }
+            });
+        }
 
     </script>
 @endif
