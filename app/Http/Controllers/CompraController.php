@@ -34,10 +34,11 @@ class CompraController extends Controller
     {
         $pedido = Pedido::findOrFail($request->pedido_id);
 
-        // 🔒 Bloqueo si está pagado
-        if ($pedido->estado->esFinal()) {
-            return back()->with('error', 'No se pueden agregar compras a un pedido pagado.');
-        }
+        // Bloqueo para edicion
+        if (!$pedido->puedeEditarCompras()) {
+        return back()->with('error', 'Las compras están bloqueadas para este pedido.');
+        // o abort(403);
+    }
 
         Compra::create($request->validated());
 
@@ -70,8 +71,10 @@ class CompraController extends Controller
     {
 
         // Bloqueo
-        if ($compra->pedido->estado->esFinal()) {
-            return back()->with('error', 'No se pueden modificar compras de un pedido pagado.');
+        $pedido = $compra->pedido;
+
+        if (!$pedido->puedeEditarCompras()) {
+            abort(403, 'Las compras están bloqueadas.');
         }
 
         $compra->update($request->validated());
@@ -85,8 +88,10 @@ class CompraController extends Controller
      */
     public function destroy(Compra $compra)
     {
-        if ($compra->pedido->estado->esFinal()) {
-        return back()->with('error', 'No se pueden eliminar compras de un pedido pagado.');
+        $pedido = $compra->pedido;
+
+        if (!$pedido->puedeEditarCompras()) {
+            abort(403, 'Las compras están bloqueadas.');
         }
 
         $pedidoId = $compra->pedido_id;

@@ -30,7 +30,7 @@
 
 <td>
 
-@if($pedido->estado->noEsFinal())
+@if($pedido->puedeEditarCompras())
 
 <a href="{{ route('compras.edit', $compra->id) }}" 
 onclick="event.preventDefault(); confirmEdit('{{ route('compras.edit', $compra->id) }}')">
@@ -75,9 +75,10 @@ ${{ number_format($pedido->totalGastado(), 2) }}
     <div class="alert alert-warning">
         Las compras están bloqueadas porque el pedido ya fue facturado o posterior.
     </div>
+@endif
 
 <hr>
-
+@if($pedido->puedeEditarCompras())
 <h5>Agregar compra</h5>
 
     <form action="{{ route('compras.store') }}" method="POST">
@@ -143,6 +144,7 @@ ${{ number_format($pedido->totalGastado(), 2) }}
         </button>
 
     </form>
+@endif
 <script>
 function confirmDelete(id) {
     Swal.fire({
@@ -175,4 +177,3 @@ function confirmEdit(url) {
     });
 }
 </script>
-@endif
