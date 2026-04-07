@@ -19,6 +19,7 @@ class StorePedidoRequest extends FormRequest
     
     public function rules(): array
     {
+        
         $tipo = $this->input('tipo');
         $rules = [
             'requisicion_id' => 'required|exists:requisiciones,id',
@@ -68,5 +69,21 @@ class StorePedidoRequest extends FormRequest
 
         return $rules;
 
+    }
+    protected function prepareForValidation()
+    {
+        if ($this->tipo === 'servicio') {
+            $this->merge([
+                'fecha_inicio' => $this->fecha_inicio_servicio,
+                'fecha_fin'    => $this->fecha_fin_servicio,
+            ]);
+        }
+
+        if ($this->tipo === 'licencia') {
+            $this->merge([
+                'fecha_inicio' => $this->fecha_inicio_licencia,
+                'fecha_fin'    => $this->fecha_fin_licencia,
+            ]);
+        }
     }
 }

@@ -74,8 +74,8 @@ class PedidoService
             'entregables' => $data['entregables'] ?? null,
             'costo_servicio' => $data['costo_servicio'] ?? null,
             'observaciones' => $data['observaciones'] ?? null,
-            'fecha_inicio' => $data['fecha_inicio'] ?? null,
-            'fecha_fin' => $data['fecha_fin'] ?? null,
+            'fecha_inicio' => $data['fecha_inicio_servicio'] ?? null,
+            'fecha_fin' => $data['fecha_fin_servicio'] ?? null,
         ]);
     }
 
@@ -88,8 +88,8 @@ class PedidoService
             'numero_usuarios' => $data['numero_usuarios'] ?? null,
             'costo_licencia' => $data['costo_licencia'] ?? null,
             'costo_renovacion' => $data['costo_renovacion'] ?? null,
-            'fecha_inicio' => $data['fecha_inicio'] ?? null,
-            'fecha_fin' => $data['fecha_fin'] ?? null,
+            'fecha_inicio' => $data['fecha_inicio_licencia'] ?? null,
+            'fecha_fin' => $data['fecha_fin_licencia'] ?? null,
         ]);
     }
 
@@ -97,10 +97,6 @@ class PedidoService
     {
         $nuevoEstado = EstadoPedido::from($data['estado']);
         $estadoActual = $pedido->estado;
-
-        if (!$pedido->puedeEditarCompras()) {
-            throw new \Exception('Las compras están bloqueadas para este pedido.');
-        }
 
         if ($estadoActual->esFinal()) {
             throw new \Exception('El pedido ya está pagado y no puede modificarse.');
