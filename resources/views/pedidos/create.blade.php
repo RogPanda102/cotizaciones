@@ -110,7 +110,7 @@
             </div>
         </div>
 
-        {{-- 🔸 SERVICIO --}}
+        {{-- SERVICIO --}}
         <div x-show="tipo === 'servicio'" x-cloak>
             <hr>
             <h5>Datos del servicio</h5>
@@ -123,6 +123,8 @@
             <input type="text" name="responsable" class="form-control mb-2" placeholder="Responsable">
             <label class="form-label">Entregables</label>
             <textarea name="entregables" class="form-control mb-2" placeholder="Entregables"></textarea>
+            <label class="form-label">Observaciones</label>
+            <textarea name="observaciones" class="form-control mb-2" placeholder="Observaciones"></textarea>
 
             <div class="row">
                 <div class="col-md-6 mb-2">

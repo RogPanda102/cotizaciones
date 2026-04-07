@@ -74,8 +74,8 @@ class PedidoService
             'entregables' => $data['entregables'] ?? null,
             'costo_servicio' => $data['costo_servicio'] ?? null,
             'observaciones' => $data['observaciones'] ?? null,
-            'fecha_inicio' => $data['fecha_inicio_servicio'] ?? null,
-            'fecha_fin' => $data['fecha_fin_servicio'] ?? null,
+            'fecha_inicio' => $data['fecha_inicio'] ?? null,
+            'fecha_fin' => $data['fecha_fin'] ?? null,
         ]);
     }
 
@@ -88,8 +88,8 @@ class PedidoService
             'numero_usuarios' => $data['numero_usuarios'] ?? null,
             'costo_licencia' => $data['costo_licencia'] ?? null,
             'costo_renovacion' => $data['costo_renovacion'] ?? null,
-            'fecha_inicio' => $data['fecha_inicio_licencia'] ?? null,
-            'fecha_fin' => $data['fecha_fin_licencia'] ?? null,
+            'fecha_inicio' => $data['fecha_inicio'] ?? null,
+            'fecha_fin' => $data['fecha_fin'] ?? null,
         ]);
     }
 
