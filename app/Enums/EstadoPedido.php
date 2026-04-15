@@ -22,9 +22,9 @@ enum EstadoPedido: string
     public function siguientesEstados(): array
     {
         return match($this) {
-            self::EN_PROCESO => [self::FACTURADO],
-            self::FACTURADO  => [self::ENTREGADO],
-            self::ENTREGADO  => [self::PAGADO],
+            self::EN_PROCESO => [self::ENTREGADO],
+            self::ENTREGADO  => [self::FACTURADO],
+            self::FACTURADO  => [self::PAGADO],
             self::PAGADO     => [],
         };
     }
