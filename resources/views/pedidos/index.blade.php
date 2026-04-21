@@ -25,7 +25,7 @@
 </form>
 <table class="table table-bordered table-hover">
     <tr>
-        <th>Requisición</th>
+        <th>Cotización</th>
         <th>Dependencia</th>
         <th>Monto</th>
         <th>Estado</th>
@@ -49,7 +49,7 @@
         }
         @endphp
         <tr class="{{ $clase }}">
-            <td>{{ $pedido->requisicion->folio_externo }}</td>
+            <td>{{ $pedido->cotizacion->folio_externo }}</td>
             <td>{{ $pedido->dependencia->nombre }}</td>
             <td>
                 ${{ number_format($pedido->monto_total_aprobado, 2) }}

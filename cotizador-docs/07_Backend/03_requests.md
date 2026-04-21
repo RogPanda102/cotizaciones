@@ -63,7 +63,7 @@ Valida actualizaciones de compras existentes.
 
 Validados en todos los tipos de pedidos:
 
-- `requisicion_id` - Debe existir en tabla requisiciones
+- `cotizacion_id` - Debe existir en tabla cotizaciones
 - `dependencia_id` - Debe existir en tabla dependencias
 - `empresa_id` - Debe existir en tabla empresas
 - `cliente_id` - Debe existir en tabla clientes

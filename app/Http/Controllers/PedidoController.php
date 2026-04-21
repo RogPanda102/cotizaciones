@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UpdatePedidoRequest;
 use App\Http\Requests\StorePedidoRequest;
 use App\Models\Pedido;
-use App\Models\Requisicion;
 use App\Models\Dependencia;
 use App\Services\PedidoService;
 use App\Models\Empresa;
 use App\Models\Cliente;
+use App\Models\Cotizacion;
 use App\Models\Proveedor;
 
 class PedidoController extends Controller
@@ -27,6 +27,7 @@ class PedidoController extends Controller
 
     public function index()
     {
+        
         return redirect()->route('empresas.index');
     }
 
@@ -35,14 +36,14 @@ class PedidoController extends Controller
      */
     public function create()
     {
-        $requisiciones = Requisicion::all();
+        $cotizaciones = Cotizacion::all();
         $dependencias = Dependencia::all();
         $empresas = Empresa::all();
         $proveedores = Proveedor::all();
         $clientes = Cliente::all();
         $empresaId = request('empresa_id');
 
-        return view('pedidos.create', compact('requisiciones', 'dependencias', 'empresas', 'proveedores', 'clientes', 'empresaId'));
+        return view('pedidos.create', compact('cotizaciones', 'dependencias', 'empresas', 'proveedores', 'clientes', 'empresaId'));
     }
 
     /**
@@ -117,7 +118,7 @@ class PedidoController extends Controller
         $empresa = Empresa::findOrFail($empresaId);
 
         $pedidos = Pedido::where('empresa_id', $empresaId)
-            ->with(['requisicion', 'dependencia'])
+            ->with(['cotizacion', 'dependencia'])
             ->latest()
             ->paginate(10);
 

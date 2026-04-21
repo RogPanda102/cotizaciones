@@ -22,7 +22,7 @@ class StorePedidoRequest extends FormRequest
         
         $tipo = $this->input('tipo');
         $rules = [
-            'requisicion_id' => 'required|exists:requisiciones,id',
+            'cotizacion_id' => 'required|exists:cotizaciones,id',
             'dependencia_id' => 'required|exists:dependencias,id',
             'empresa_id' => 'required|exists:empresas,id',
             'cliente_id' => 'required|exists:clientes,id',

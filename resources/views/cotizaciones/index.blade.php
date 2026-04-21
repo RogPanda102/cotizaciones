@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<h2>Lista de Requisiciones</h2>
+<h2>Lista de Cotizaciones</h2>
 
-<a href="{{ route('requisiciones.create') }}">
-    Nueva Requisición
+<a href="{{ route('cotizaciones.create') }}">
+    Nueva Cotización
 </a>
 
 <br><br>
@@ -22,11 +22,11 @@
         <th>Estado</th>
     </tr>
 
-    @foreach($requisiciones as $req)
+    @foreach($cotizaciones as $cot)
         <tr>
-            <td>{{ $req->folio_externo }}</td>
-            <td>{{ $req->descripcion }}</td>
-            <td>{{ $req->estado->label() }}</td>
+            <td>{{ $cot->folio_externo }}</td>
+            <td>{{ $cot->descripcion }}</td>
+            <td>{{ $cot->estado->label() }}</td>
             
         </tr>
     @endforeach

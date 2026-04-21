@@ -30,7 +30,7 @@ El sistema está compuesto por los siguientes modelos:
 - Proveedor
 - Empresa
 - Dependencia
-- Requisicion
+- Cotizacion
 - Compra
 - PedidoServicio
 - PedidoLicencia
@@ -56,7 +56,7 @@ Representa una operación completa dentro del ERP.
 - proveedor
 - empresa
 - dependencia
-- requisicion
+- cotizacion
 
 ---
 
@@ -129,7 +129,7 @@ Representa una operación completa dentro del ERP.
 
 ---
 
-### Requisicion
+### Cotizacion
 
 - Referencia administrativa
 - Relación: hasMany pedidos

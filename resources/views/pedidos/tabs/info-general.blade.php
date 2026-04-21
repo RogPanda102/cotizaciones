@@ -10,8 +10,8 @@
             <div class="card-body">
 
                 <p>
-                    <strong>Requisición:</strong><br>
-                    {{ $pedido->requisicion->folio_externo ?? '—' }}
+                    <strong>Cotización:</strong><br>
+                    {{ $pedido->cotizacion->folio_externo ?? '—' }}
                 </p>
 
                 <p>

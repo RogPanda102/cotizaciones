@@ -95,7 +95,7 @@
 
         <!-- NAV -->
         <nav>
-            <a href="{{ route('requisiciones.index') }}">Requisiciones</a>
+            <a href="{{ route('cotizaciones.index') }}">Cotizaciones</a>
             <a href="{{ route('dependencias.index') }}">Dependencias</a>
             <a href="{{ route('proveedores.index') }}">Proveedores</a>
         </nav>

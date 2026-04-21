@@ -19,7 +19,7 @@ class Pedido extends Model
     ];
 
     protected $fillable = [
-        'requisicion_id',
+        'cotizacion_id',
         'dependencia_id',
         'empresa_id',
         'cliente_id',
@@ -35,9 +35,9 @@ class Pedido extends Model
     ];
 
     // Relaciones principales
-    public function requisicion()
+    public function cotizacion()
     {
-        return $this->belongsTo(Requisicion::class);
+        return $this->belongsTo(Cotizacion::class);
     }
 
     public function dependencia()

@@ -25,7 +25,7 @@ class PedidoService
             $data['estado'] = EstadoPedido::EN_PROCESO;
 
             $pedidoData = collect($data)->only([
-                'requisicion_id',
+                'cotizacion_id',
                 'dependencia_id',
                 'empresa_id',
                 'cliente_id',

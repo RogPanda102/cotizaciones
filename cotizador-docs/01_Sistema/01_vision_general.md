@@ -35,7 +35,7 @@ El sistema cubre las siguientes áreas:
 - Proveedores
 - Empresas
 - Dependencias
-- Requisiciones
+- Cotizaciones
 
 ### 3. Control financiero
 - Registro de costos
