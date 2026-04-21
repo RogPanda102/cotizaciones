@@ -1,7 +1,7 @@
 <?php
 namespace App\Enums;
 
-enum EstadoRequisicion: string
+enum EstadoCotizacion: string
 {
     case PENDIENTE = 'pendiente';
     case ADJUDICADA  = 'adjudicada';

@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Enums\EstadoRequisicion;
+use App\Enums\EstadoCotizacion;
 
-class Requisicion extends Model
+class Cotizacion extends Model
 {
-    protected $table = 'requisiciones';
+    protected $table = 'cotizaciones';
 
     protected $casts = [
-        'estado' => EstadoRequisicion::class,
+        'estado' => EstadoCotizacion::class,
     ];
 
     protected $fillable = [

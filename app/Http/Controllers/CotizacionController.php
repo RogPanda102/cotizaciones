@@ -3,19 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Requisicion;
-use App\Enums\EstadoRequisicion;
+use App\Models\Cotizacion;
+use App\Enums\EstadoCotizacion;
 use Illuminate\Validation\Rules\Enum;
 
-class RequisicionController extends Controller
+class CotizacionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $requisiciones = Requisicion::all();
-        return view('requisiciones.index', compact('requisiciones'));
+        $cotizaciones = Cotizacion::all();
+        return view('cotizaciones.index', compact('cotizaciones'));
     }
 
     /**
@@ -23,7 +23,7 @@ class RequisicionController extends Controller
      */
     public function create()
     {
-        return view('requisiciones.create');
+        return view('cotizaciones.create');
     }
 
     /**
@@ -32,15 +32,15 @@ class RequisicionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'folio_externo' => 'required|unique:requisiciones,folio_externo',
+            'folio_externo' => 'required|unique:cotizaciones,folio_externo',
             'descripcion' => 'required',
-            'estado' => ['required', new Enum(EstadoRequisicion::class)],
+            'estado' => ['required', new Enum(EstadoCotizacion::class)],
         ]);
 
-        Requisicion::create($request->all());
+        Cotizacion::create($request->all());
 
-        return redirect()->route('requisiciones.index')
-                         ->with('success', 'Requisición creada exitosamente.');
+        return redirect()->route('cotizaciones.index')
+                         ->with('success', 'Cotización creada exitosamente.');
     }
 
     /**
@@ -62,23 +62,23 @@ class RequisicionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Requisicion $requisicion)
+    public function update(Request $request, Cotizacion $cotizacion)
     {
         $request->validate([
-            'folio_externo' => 'required|unique:requisiciones,folio_externo,' . $requisicion->id,
+            'folio_externo' => 'required|unique:cotizaciones,folio_externo,' . $cotizacion->id,
             'descripcion' => 'required',
-            'estado' => ['required', new Enum(EstadoRequisicion::class)],
+            'estado' => ['required', new Enum(EstadoCotizacion::class)],
         ]);
 
         
-        $requisicion->update($request->only([
+        $cotizacion->update($request->only([
             'folio_externo',
             'descripcion',
             'estado',
         ]));
 
-        return redirect()->route('requisiciones.index')
-                         ->with('success', 'Requisición actualizada exitosamente.');
+        return redirect()->route('cotizaciones.index')
+                         ->with('success', 'Cotización actualizada exitosamente.');
     } 
 
     /**

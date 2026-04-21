@@ -74,7 +74,7 @@ Responsabilidades:
 
 ---
 
-### Requisicion
+### Cotizacion
 
 Representa el origen administrativo del pedido.
 

@@ -26,7 +26,7 @@ Es uno de los componentes más complejos, ya que integra múltiples módulos y c
 
 El formulario está dividido en secciones:
 
-- Datos generales de empresa y requisicion (empresa ya queda preseleccionado)
+- Datos generales de empresa y cotizacion (empresa ya queda preseleccionado)
 - Cliente
 - Proveedor
 - Tipo de pedido/Dependencia
@@ -39,7 +39,7 @@ El formulario está dividido en secciones:
 Incluye:
 
 - empresa_id
-- requisicion_id
+- cotizacion_id
 
 ---
 

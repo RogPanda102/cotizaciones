@@ -1,4 +1,4 @@
-<h2>Crear Requisición</h2>
+<h2>Crear Cotización</h2>
 @if ($errors->any())
     <div>
         @foreach ($errors->all() as $error)
@@ -6,7 +6,7 @@
         @endforeach
     </div>
 @endif
-<form action="{{ route('requisiciones.store') }}" method="POST">
+<form action="{{ route('cotizaciones.store') }}" method="POST">
     @csrf
 
     <label>Folio Externo:</label>
@@ -21,7 +21,7 @@
 
     <label>Estado:</label>
     <select name="estado">
-        @foreach(App\Enums\EstadoRequisicion::cases() as $estado)
+        @foreach(App\Enums\EstadoCotizacion::cases() as $estado)
             <option value="{{ $estado->value }}">
                 {{ $estado->label() }}
             </option>

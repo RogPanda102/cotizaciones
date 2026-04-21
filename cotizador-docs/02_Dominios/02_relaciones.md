@@ -16,7 +16,7 @@ El modelo `Pedido` contiene las siguientes relaciones:
 
 Un pedido pertenece a:
 
-- requisicion
+- cotizacion
 - dependencia
 - empresa
 - cliente
@@ -31,7 +31,7 @@ Un pedido:
 - pertenece a una dependencia
 - pertenece a un cliente
 - pertenece a un proveedor
-- puede tener una requisición asociada
+- puede tener una cotización asociada
 
 ---
 
@@ -134,7 +134,7 @@ Esto permite:
 
 ---
 
-### Requisicion
+### Cotizacion
 
 - tiene muchos pedidos
 

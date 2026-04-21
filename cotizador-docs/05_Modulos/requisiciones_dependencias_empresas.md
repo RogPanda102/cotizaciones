@@ -1,4 +1,4 @@
-# Módulo de Requisiciones, Dependencias y Empresas
+# Módulo de Cotizaciones, Dependencias y Empresas
 
 ## Introducción
 
@@ -14,7 +14,7 @@ El módulo está compuesto por:
 
 - Empresa
 - Dependencia
-- Requisición
+- Cotización
 
 ---
 
@@ -78,7 +78,7 @@ Representa una entidad publica o federativa a la que se le brinda el servicio.
 
 ---
 
-## Requisición
+## Cotización
 
 ### Descripción
 
@@ -95,8 +95,8 @@ Representa el origen administrativo o documental de un pedido.
 
 ### Relación
 
-- Una requisición tiene muchos pedidos
-- Un pedido puede pertenecer a una requisición
+- Una Cotización tiene muchos pedidos
+- Un pedido puede pertenecer a una cotización
 
 ---
 
@@ -113,7 +113,7 @@ Estas entidades se relacionan indirectamente a través del pedido:
 
 Empresa → Pedido  
 Dependencia → Pedido  
-Requisición → Pedido  
+Cotización → Pedido  
 
 El modelo `Pedido` actúa como punto de unión.
 

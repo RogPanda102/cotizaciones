@@ -45,7 +45,7 @@ La informacion detallada se organiza mediante tabs:
 Contiene:
 
 - Dependencia
-- Requisición
+- Cotización
 - Dias registrados para la entrega/tipo de dias para credito
 - Dias registrados de credito
 

@@ -27,10 +27,10 @@
 
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label class="form-label">Requisición</label>
-                <select name="requisicion_id" class="form-control w-100">
-                    @foreach($requisiciones as $req)
-                        <option value="{{ $req->id }}">{{ $req->folio_externo }}</option>
+                <label class="form-label">Cotización</label>
+                <select name="cotizacion_id" class="form-control w-100">
+                    @foreach($cotizaciones as $cot)
+                        <option value="{{ $cot->id }}">{{ $cot->folio_externo }}</option>
                     @endforeach
                 </select>
             </div>

@@ -31,7 +31,7 @@ La vista se divide en múltiples tabs, cada uno enfocado en un área específica
 Contiene:
 
 - Dependencia
-- Requisición
+- Cotización
 - Tipo de dias
 - Dias de entrega
 - Dias de cradito
