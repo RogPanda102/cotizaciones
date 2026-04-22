@@ -25,7 +25,7 @@ class StorePedidoRequest extends FormRequest
             'cotizacion_id' => 'required|exists:cotizaciones,id',
             'dependencia_id' => 'required|exists:dependencias,id',
             'empresa_id' => 'required|exists:empresas,id',
-            'cliente_id' => 'required|exists:clientes,id',
+            'departamento_id' => 'required|exists:departamentos,id',
             'proveedor_id' => 'nullable|exists:proveedores,id',
 
             'monto_total_aprobado' => 'required|numeric|min:0',
@@ -35,10 +35,6 @@ class StorePedidoRequest extends FormRequest
             'dias_credito' => 'required|integer|min:0',
 
             'tipo' => 'required|in:servicio,licencia,mercadeo',
-
-            //'telefono_cliente' => 'nullable|string|max:50',
-            //'email_cliente' => 'nullable|email|max:255',
-            //'direccion_cliente' => 'nullable|string|max:255',
         ];
 
         // Reglas dinámicas

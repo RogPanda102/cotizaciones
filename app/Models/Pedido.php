@@ -22,7 +22,7 @@ class Pedido extends Model
         'cotizacion_id',
         'dependencia_id',
         'empresa_id',
-        'cliente_id',
+        'departamento_id',
         'proveedor_id',
         'tipo',
         'monto_total_aprobado',
@@ -55,9 +55,9 @@ class Pedido extends Model
         return $this->belongsTo(Empresa::class);
     }
 
-    public function cliente()
+    public function departamento()
     {
-        return $this->belongsTo(Cliente::class);
+        return $this->belongsTo(Departamento::class);
     }
 
     public function proveedor()

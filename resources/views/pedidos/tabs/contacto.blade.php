@@ -1,37 +1,37 @@
 <div class="row">
 
-    {{-- CLIENTE --}}
+    {{-- DEPARTAMENTO --}}
     <div class="col-md-6 mb-3">
         <div class="card h-100">
             <div class="card-header">
-                Cliente
+                Departamento 
             </div>
 
             <div class="card-body">
 
                 <p>
-                    <strong>Departamento:</strong><br>
-                    {{ $pedido->cliente->departamento ?? '—' }}
+                    <strong>Nombre del departamento:</strong><br>
+                    {{ $pedido->departamento->nombre_departamento ?? '—' }}
                 </p>
 
                 <p>
                     <strong>Nombre de contacto:</strong><br>
-                    {{ $pedido->cliente->contacto ?? '—' }}
+                    {{ $pedido->departamento->responsable ?? '—' }}
                 </p>
 
                 <p>
                     <strong>Teléfono:</strong><br>
-                    {{ $pedido->cliente->telefono ?? '—' }}
+                    {{ $pedido->departamento->telefono ?? '—' }}
                 </p>
 
                 <p>
                     <strong>Email:</strong><br>
-                    {{ $pedido->cliente->email ?? '—' }}
+                    {{ $pedido->departamento->email ?? '—' }}
                 </p>
 
                 <p class="mb-0">
                     <strong>Dirección:</strong><br>
-                    {{ $pedido->cliente->direccion ?? '—' }}
+                    {{ $pedido->departamento->direccion ?? '—' }}
                 </p>
 
             </div>

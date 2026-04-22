@@ -59,9 +59,9 @@
                 <label class="form-label">Cliente</label>
                 <select name="cliente_id" id="clienteSelect" class="form-control w-100">
                     <option value="">Selecciona cliente</option>
-                    @foreach($clientes as $cliente)
-                        <option value="{{ $cliente->id }}">
-                            {{ $cliente->departamento }} - {{ $cliente->contacto }}
+                    @foreach($departamentos as $departamento)
+                        <option value="{{ $departamento->id }}">
+                            {{ $departamento->nombre_departamento }} - {{ $departamento->responsable }}
                         </option>
                     @endforeach
                 </select>
@@ -237,7 +237,7 @@
     <div class="modal-content">
 
         <div class="modal-header">
-            <h5 class="modal-title">Nuevo Cliente</h5>
+            <h5 class="modal-title">Nuevo Departamento</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
 
