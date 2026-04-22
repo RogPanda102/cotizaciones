@@ -1,28 +1,28 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Cliente;
+use App\Models\Departamento;
 
 use Illuminate\Http\Request;
 
-class ClienteController extends Controller
+class DepartamentoController extends Controller
 {
     public function buscar(Request $request)
     {
         $email = $request->email ? trim(strtolower($request->email)) : null;
         $telefono = $request->telefono ? preg_replace('/\D/', '', $request->telefono) : null;
 
-        $cliente = null;
+        $departamento = null;
 
         if ($email) {
-            $cliente = Cliente::whereRaw('LOWER(email) = ?', [$email])->first();
+            $departamento = Departamento::whereRaw('LOWER(email) = ?', [$email])->first();
         }
 
-        if (!$cliente && $telefono) {
-            $cliente = Cliente::whereRaw("REGEXP_REPLACE(telefono, '[^0-9]', '') = ?", [$telefono])->first();
+        if (!$departamento && $telefono) {
+            $departamento = Departamento::whereRaw("REGEXP_REPLACE(telefono, '[^0-9]', '') = ?", [$telefono])->first();
         }
 
-        return response()->json($cliente); // 👈 CLAVE
+        return response()->json($departamento); // 👈 CLAVE
     }
     /**
      * Display a listing of the resource.
@@ -50,34 +50,34 @@ class ClienteController extends Controller
         $telefono = $request->telefono ? preg_replace('/\D/', '', $request->telefono) : null;
 
         // 🔍 BUSCAR DUPLICADO
-        $clienteExistente = null;
+        $departamentoExistente = null;
 
         if ($email) {
-            $clienteExistente = Cliente::whereRaw('LOWER(email) = ?', [$email])->first();
+            $departamentoExistente = Departamento::whereRaw('LOWER(email) = ?', [$email])->first();
         }
 
-        if (!$clienteExistente && $telefono) {
-            $clienteExistente = Cliente::whereRaw("REGEXP_REPLACE(telefono, '[^0-9]', '') = ?", [$telefono])->first();
+        if (!$departamentoExistente && $telefono) {
+            $departamentoExistente = Departamento::whereRaw("REGEXP_REPLACE(telefono, '[^0-9]', '') = ?", [$telefono])->first();
         }
 
         // 🚫 SI YA EXISTE → NO CREAR
-        if ($clienteExistente) {
+        if ($departamentoExistente) {
             return response()->json([
                 'existe' => true,
-                'cliente' => $clienteExistente
+                'departamento' => $departamentoExistente
             ], 200);
         }
 
         // ✅ CREAR NUEVO
-        $cliente = Cliente::create([
-            'departamento' => $request->departamento,
-            'contacto' => $request->contacto,
+        $departamento = Departamento::create([
+            'nombre_departamento' => $request->nombre_departamento,
+            'responsable' => $request->responsable,
             'telefono' => $telefono,
             'email' => $email,
             'direccion' => $request->direccion,
         ]);
 
-        return response()->json($cliente, 201);
+        return response()->json($departamento, 201);
     }
 
     /**

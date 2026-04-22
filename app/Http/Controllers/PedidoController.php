@@ -8,7 +8,7 @@ use App\Models\Pedido;
 use App\Models\Dependencia;
 use App\Services\PedidoService;
 use App\Models\Empresa;
-use App\Models\Cliente;
+use App\Models\Departamento;
 use App\Models\Cotizacion;
 use App\Models\Proveedor;
 
@@ -40,10 +40,10 @@ class PedidoController extends Controller
         $dependencias = Dependencia::all();
         $empresas = Empresa::all();
         $proveedores = Proveedor::all();
-        $clientes = Cliente::all();
+        $departamentos = Departamento::all();
         $empresaId = request('empresa_id');
 
-        return view('pedidos.create', compact('cotizaciones', 'dependencias', 'empresas', 'proveedores', 'clientes', 'empresaId'));
+        return view('pedidos.create', compact('cotizaciones', 'dependencias', 'empresas', 'proveedores', 'departamentos', 'empresaId'));
     }
 
     /**

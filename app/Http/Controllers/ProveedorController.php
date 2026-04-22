@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Proveedor;
 use App\Models\Empresa;
-use App\Models\Cliente;
+use App\Models\Departamento;
 
 class ProveedorController extends Controller
 {
@@ -26,7 +26,7 @@ class ProveedorController extends Controller
         return view('proveedores.create', [
             'proveedores' => Proveedor::all(),
             'empresas' => Empresa::all(),
-            'clientes' => Cliente::all(), // si aplica
+            'departamentos' => Departamento::all(), // si aplica
         ]);
     }
 

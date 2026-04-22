@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Cliente;
 use App\Models\Pedido;
 use App\Enums\EstadoPedido;
 use App\Models\PedidoServicio;
@@ -17,18 +16,18 @@ class PedidoService
         return DB::transaction(function () use ($data) {
 
             // Validación de seguridad (opcional pero pro)
-            if (empty($data['cliente_id'])) {
-                throw new \Exception('Debe seleccionar o crear un cliente.');
+            if (empty($data['departamento_id'])) {
+                throw new \Exception('Debe seleccionar o crear un departamento.');
             }
-            // asignar cliente al pedido
-        
+            // asignar departamento al pedido
+
             $data['estado'] = EstadoPedido::EN_PROCESO;
 
             $pedidoData = collect($data)->only([
                 'cotizacion_id',
                 'dependencia_id',
                 'empresa_id',
-                'cliente_id',
+                'departamento_id',
                 'proveedor_id',
                 'monto_total_aprobado',
                 'fecha_adjudicacion',
