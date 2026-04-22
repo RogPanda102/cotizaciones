@@ -30,8 +30,8 @@ class DependenciaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nombre' => 'required|string|max:255',
-            'direccion' => 'required|string|max:255',
+            'nombre_oficial' => 'required|string|max:255',
+            'nombre_corto' => 'nullable|string|max:255',
         ]);
 
         Dependencia::create($request->all());

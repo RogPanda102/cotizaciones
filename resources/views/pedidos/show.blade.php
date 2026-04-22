@@ -16,7 +16,7 @@
 
                 <p>
                 <strong>Dependencia:</strong>
-                    {{ $pedido->dependencia->nombre }}
+                    {{ $pedido->dependencia->nombre_oficial }}
                 </p>
 
                 <p>
