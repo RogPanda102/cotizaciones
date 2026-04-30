@@ -8,15 +8,15 @@
 <table border="1">
     <tr>
         <th>ID</th>
-        <th>Nombre</th>
-        <th>Dirección</th>
+        <th>Nombre Oficial</th>
+        <th>Nombre Corto</th>
     </tr>
 
     @foreach($dependencias as $dependencia)
         <tr>
             <td>{{ $dependencia->id }}</td>
-            <td>{{ $dependencia->nombre }}</td>
-            <td>{{ $dependencia->direccion }}</td>
+            <td>{{ $dependencia->nombre_oficial }}</td>
+            <td>{{ $dependencia->nombre_corto }}</td>
         </tr>
     @endforeach
 </table>

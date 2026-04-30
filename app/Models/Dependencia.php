@@ -9,7 +9,7 @@ class Dependencia extends Model
     protected $table = 'dependencias';
 
     protected $fillable = [
-        'nombre',
-        'direccion'
+        'nombre_oficial',
+        'nombre_corto',
     ];
 }
