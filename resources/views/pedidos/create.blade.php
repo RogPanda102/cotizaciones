@@ -51,14 +51,14 @@
 
         <hr>
 
-        {{-- 🔹 CLIENTE / PROVEEDOR --}}
-        <h5 class="mb-3">Cliente y proveedor</h5>
+        {{-- 🔹 DEPARTAMENTO / PROVEEDOR --}}
+        <h5 class="mb-3">Departamento y proveedor</h5>
 
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label class="form-label">Cliente</label>
-                <select name="cliente_id" id="clienteSelect" class="form-control w-100">
-                    <option value="">Selecciona cliente</option>
+                <label class="form-label">Departamento</label>
+                <select name="departamento_id" id="departamentoSelect" class="form-control w-100">
+                    <option value="">Selecciona departamento</option>
                     @foreach($departamentos as $departamento)
                         <option value="{{ $departamento->id }}">
                             {{ $departamento->nombre_departamento }} - {{ $departamento->responsable }}
@@ -66,8 +66,8 @@
                     @endforeach
                 </select>
 
-                <button type="button" class="btn btn-outline-secondary mt-2" data-bs-toggle="modal" data-bs-target="#modalCliente">
-                    + Nuevo cliente
+                <button type="button" class="btn btn-outline-secondary mt-2" data-bs-toggle="modal" data-bs-target="#modalDepartamento">
+                    + Nuevo departamento
                 </button>
             </div>
 
@@ -232,7 +232,7 @@
 </div>
 </div>
 </div>
-<div class="modal fade" id="modalCliente" tabindex="-1">
+<div class="modal fade" id="modalDepartamento" tabindex="-1">
   <div class="modal-dialog modal-lg"> <!-- lg = más ancho -->
     <div class="modal-content">
 
@@ -264,11 +264,11 @@
                     <input type="text" id="nuevo_direccion" class="form-control" placeholder="Dirección">
                 </div>
             </div>
-            <div id="cliente-existente" class="alert alert-warning d-none">
-                Cliente existente: <span id="cliente-info"></span>
+            <div id="departamento-existente" class="alert alert-warning d-none">
+                Departamento existente: <span id="departamento-info"></span>
                 <br>
                 <button type="button" class="btn btn-sm btn-primary mt-2" onclick="usarClienteExistente()">
-                    Usar este cliente
+                    Usar este departamento
                 </button>
             </div>
 
@@ -278,7 +278,7 @@
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
             Cancelar
             </button>
-            <button type="button" class="btn btn-primary" onclick="guardarCliente()">
+            <button type="button" class="btn btn-primary" onclick="guardarDepartamento()">
             Guardar
             </button>
         </div>
@@ -288,7 +288,7 @@
 </div>
 <script>
 
-let clienteDetectado = null;
+let departamentoDetectado = null;
 
 function pedidoForm() {
     return {
@@ -297,112 +297,102 @@ function pedidoForm() {
 }
 
 // 🔥 CERRAR MODAL BIEN (Bootstrap)
-function cerrarModalCliente() {
-    const modalEl = document.getElementById('modalCliente');
+function cerrarModalDepartamento() {
+    const modalEl = document.getElementById('modalDepartamento');
     const modal = bootstrap.Modal.getInstance(modalEl);
     if (modal) modal.hide();
 }
 
-// 🔥 GUARDAR CLIENTE (MEJORADO)
-function guardarCliente() {
-
-    if (clienteDetectado) {
-        alert('Este cliente ya existe, usa "Usar este cliente"');
+// 🔥 GUARDAR DEPARTAMENTO
+function guardarDepartamento() {
+    if (departamentoDetectado) {
+        alert('Este departamento ya existe, usa "Usar este departamento"');
         return;
     }
-    
-    fetch('/clientes', {
+
+    const payload = {
+        nombre_departamento: document.getElementById('nuevo_departamento').value.trim(),
+        responsable: document.getElementById('nuevo_contacto').value.trim(),
+        telefono: (document.getElementById('nuevo_telefono').value || '').replace(/\D/g, ''),
+        email: (document.getElementById('nuevo_email').value || '').trim().toLowerCase(),
+        direccion: document.getElementById('nuevo_direccion').value.trim(),
+    };
+
+    if (!payload.nombre_departamento) {
+        alert('El nombre del departamento es obligatorio');
+        return;
+    }
+
+    fetch('/departamentos', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
         },
-        body: JSON.stringify({
-            departamento: document.getElementById('nuevo_departamento').value,
-            contacto: document.getElementById('nuevo_contacto').value,
-            telefono: document.getElementById('nuevo_telefono').value,
-            email: document.getElementById('nuevo_email').value,
-            direccion: document.getElementById('nuevo_direccion').value,
-        })
+        body: JSON.stringify(payload),
     })
     .then(res => {
         if (!res.ok) {
-            throw new Error('Error al guardar cliente');
+            throw new Error('Error al guardar departamento');
         }
         return res.json();
     })
-    .then(data => {
-
-        // 🚫 Ya existe
-        if (data.existe) {
-            clienteDetectado = data.cliente;
-
-            document.getElementById('cliente-existente').classList.remove('d-none');
-
-            document.getElementById('cliente-info').innerText =
-                `${data.cliente.departamento} - ${data.cliente.contacto}`;
-
-            return;
-        }
-
-        // ✅ Cliente nuevo
-        let cliente = data;
-
-        let select = document.getElementById('clienteSelect');
-
+    .then(departamento => {
+        const select = document.getElementById('departamentoSelect');
         let option = document.createElement('option');
-        option.value = cliente.id;
-        option.text = cliente.departamento + ' - ' + cliente.contacto;
+        option.value = departamento.id;
+        option.text = departamento.nombre;
 
         select.appendChild(option);
-        select.value = cliente.id;
+        select.value = departamento.id;
 
-        clienteDetectado = null;
+        departamentoDetectado = null;
+        document.getElementById('departamento-existente').classList.add('d-none');
 
-        cerrarModalCliente();
+        cerrarModalDepartamento();
     })
     .catch(error => {
         console.error(error);
-        alert('Ocurrió un error al guardar el cliente');
+        alert('Ocurrió un error al guardar el departamento');
     });
 }
 
 
-// 🔥 BUSCAR CLIENTE EXISTENTE
-function buscarClienteExistente() {
-
-    const email = document.getElementById('nuevo_email').value;
-    const telefono = document.getElementById('nuevo_telefono').value;
+// 🔥 BUSCAR DEPARTAMENTO EXISTENTE
+function buscarDepartamentoExistente() {
+    const email = (document.getElementById('nuevo_email').value || '').trim().toLowerCase();
+    const telefono = (document.getElementById('nuevo_telefono').value || '').replace(/\D/g, '');
 
     if (!email && !telefono) return;
 
-    fetch(`/clientes/buscar?email=${email}&telefono=${telefono}`)
+    fetch(`/departamentos/buscar?email=${encodeURIComponent(email)}&telefono=${encodeURIComponent(telefono)}`)
         .then(res => res.json())
-        .then(cliente => {
-            if (cliente && cliente.id) {
-                clienteDetectado = cliente;
+        .then(departamento => {
+            if (departamento && departamento.id) {
+                departamentoDetectado = departamento;
 
-                document.getElementById('cliente-existente').classList.remove('d-none');
+                document.getElementById('departamento-existente').classList.remove('d-none');
 
-                document.getElementById('cliente-info').innerText =
-                    `${cliente.departamento ?? 'Sin departamento'} - ${cliente.contacto ?? 'Sin contacto'}`;
+                document.getElementById('departamento-info').innerText =
+                    `${departamento.nombre_departamento ?? 'Sin departamento'} - ${departamento.responsable ?? 'Sin responsable'}`;
             } else {
-                clienteDetectado = null;
-                document.getElementById('cliente-existente').classList.add('d-none');
+                departamentoDetectado = null;
+                document.getElementById('departamento-existente').classList.add('d-none');
             }
         });
 }
 
 
-// 🔥 USAR CLIENTE DETECTADO
+// 🔥 USAR DEPARTAMENTO DETECTADO
 function usarClienteExistente() {
-    if (!clienteDetectado) return;
+    if (!departamentoDetectado) return;
 
-    let select = document.getElementById('clienteSelect');
+    let select = document.getElementById('departamentoSelect');
 
-    select.value = clienteDetectado.id;
+    select.value = departamentoDetectado.id;
 
-    cerrarModalCliente();
+    cerrarModalDepartamento();
 }
 
 
@@ -411,8 +401,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const email = document.getElementById('nuevo_email');
     const telefono = document.getElementById('nuevo_telefono');
 
-    if (email) email.addEventListener('blur', buscarClienteExistente);
-    if (telefono) telefono.addEventListener('blur', buscarClienteExistente);
+    if (email) email.addEventListener('blur', buscarDepartamentoExistente);
+    if (telefono) telefono.addEventListener('blur', buscarDepartamentoExistente);
 });
 
 </script>

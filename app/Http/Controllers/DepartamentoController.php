@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Departamento;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class DepartamentoController extends Controller
 {
@@ -43,41 +44,30 @@ class DepartamentoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        // 🔥 NORMALIZAR
-        $email = $request->email ? trim(strtolower($request->email)) : null;
-        $telefono = $request->telefono ? preg_replace('/\D/', '', $request->telefono) : null;
-
-        // 🔍 BUSCAR DUPLICADO
-        $departamentoExistente = null;
-
-        if ($email) {
-            $departamentoExistente = Departamento::whereRaw('LOWER(email) = ?', [$email])->first();
-        }
-
-        if (!$departamentoExistente && $telefono) {
-            $departamentoExistente = Departamento::whereRaw("REGEXP_REPLACE(telefono, '[^0-9]', '') = ?", [$telefono])->first();
-        }
-
-        // 🚫 SI YA EXISTE → NO CREAR
-        if ($departamentoExistente) {
-            return response()->json([
-                'existe' => true,
-                'departamento' => $departamentoExistente
-            ], 200);
-        }
-
-        // ✅ CREAR NUEVO
-        $departamento = Departamento::create([
-            'nombre_departamento' => $request->nombre_departamento,
-            'responsable' => $request->responsable,
-            'telefono' => $telefono,
-            'email' => $email,
-            'direccion' => $request->direccion,
+        $validated = $request->validate([
+            'dependencia_id' => ['nullable', 'exists:dependencias,id'],
+            'nombre_departamento' => ['required', 'string', 'max:255'],
+            'responsable' => ['nullable', 'string', 'max:255'],
+            'telefono' => ['nullable', 'string', 'max:50'],
+            'email' => ['nullable', 'email', 'max:255'],
+            'direccion' => ['nullable', 'string', 'max:255'],
         ]);
 
-        return response()->json($departamento, 201);
+        $departamento = Departamento::create([
+            'dependencia_id' => $validated['dependencia_id'] ?? null,
+            'nombre_departamento' => trim($validated['nombre_departamento']),
+            'responsable' => $validated['responsable'] ?? null,
+            'telefono' => $validated['telefono'] ?? null,
+            'email' => isset($validated['email']) ? strtolower(trim($validated['email'])) : null,
+            'direccion' => $validated['direccion'] ?? null,
+        ]);
+
+        return response()->json([
+            'id' => $departamento->id,
+            'nombre' => $departamento->nombre_departamento,
+        ], 201);
     }
 
     /**
