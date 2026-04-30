@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Cotizacion;
 use App\Enums\EstadoCotizacion;
-use Illuminate\Validation\Rules\Enum;
+use App\Http\Requests\StoreCotizacionRequest;
+use App\Http\Requests\UpdateCotizacionRequest;
+use App\Services\CotizacionService;
 
 class CotizacionController extends Controller
 {
@@ -14,8 +16,24 @@ class CotizacionController extends Controller
      */
     public function index()
     {
-        $cotizaciones = Cotizacion::all();
+        $cotizaciones = Cotizacion::with([
+            'empresa',
+            'dependencia',
+            'departamento',
+            'analista',
+            'pedido'
+        ])->latest()->get();
         return view('cotizaciones.index', compact('cotizaciones'));
+    }
+
+    private function getFormData(): array
+    {
+        return [
+            'empresas' => \App\Models\Empresa::all(),
+            'dependencias' => \App\Models\Dependencia::all(),
+            'departamentos' => \App\Models\Departamento::all(),
+            'analistas' => \App\Models\Analista::all(),
+        ];
     }
 
     /**
@@ -23,70 +41,79 @@ class CotizacionController extends Controller
      */
     public function create()
     {
-        return view('cotizaciones.create');
+        return view('cotizaciones.create', $this->getFormData());
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCotizacionRequest $request, CotizacionService $service)
     {
-        $request->validate([
-            'folio_externo' => 'required|unique:cotizaciones,folio_externo',
-            'descripcion' => 'required',
-            'estado' => ['required', new Enum(EstadoCotizacion::class)],
-        ]);
+        $cotizacion = $service->crearCotizacion($request->validated());
 
-        Cotizacion::create($request->all());
-
-        return redirect()->route('cotizaciones.index')
-                         ->with('success', 'Cotización creada exitosamente.');
+        return redirect()
+            ->route('cotizaciones.show', $cotizacion)
+            ->with('success', 'Cotización creada correctamente');
     }
 
     /**
      * Display the specified resource.
      */
-    /* public function show(string $id)
+    public function show(Cotizacion $cotizacion)
     {
-        //
-    } */
+        $cotizacion->load([
+            'empresa',
+            'dependencia',
+            'departamento',
+            'analista',
+            'pedido'
+        ]);
+        return view('cotizaciones.show', compact('cotizacion'));
+    } 
 
     /**
      * Show the form for editing the specified resource.
      */
-    /* public function edit(string $id)
+    public function edit(Cotizacion $cotizacion)
     {
-        //
-    } */
+        return view('cotizaciones.edit', array_merge($this->getFormData(),['cotizacion' => $cotizacion]));
+    } 
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Cotizacion $cotizacion)
+    public function update(UpdateCotizacionRequest $request, Cotizacion $cotizacion, CotizacionService $service)
     {
-        $request->validate([
-            'folio_externo' => 'required|unique:cotizaciones,folio_externo,' . $cotizacion->id,
-            'descripcion' => 'required',
-            'estado' => ['required', new Enum(EstadoCotizacion::class)],
-        ]);
+        $data = $request->validated();
 
-        
-        $cotizacion->update($request->only([
-            'folio_externo',
-            'descripcion',
-            'estado',
-        ]));
+        // Validar transición de estado
+        if (isset($data['estado'])) {
+            $estadoActual = EstadoCotizacion::from($cotizacion->estado);
+            $nuevoEstado = EstadoCotizacion::from($data['estado']);
 
-        return redirect()->route('cotizaciones.index')
-                         ->with('success', 'Cotización actualizada exitosamente.');
+            if (!$estadoActual->puedeTransicionarA($nuevoEstado)) {
+                return back()->withErrors([
+                    'estado' => 'Transición de estado no permitida.'
+                ]);
+            }
+        }
+        $cotizacion = $service->actualizarCotizacion($cotizacion, $data);
+
+        return redirect()
+            ->route('cotizaciones.show', $cotizacion)
+            ->with('success', 'Cotización actualizada correctamente');
     } 
 
     /**
      * Remove the specified resource from storage.
      */
-    /* public function destroy(string $id)
+    public function destroy(Cotizacion $cotizacion)
     {
-        //
-    } */
+        $cotizacion->delete();
+
+        return redirect()
+            ->route('cotizaciones.index')
+            ->with('success', 'Cotización eliminada');
+    } 
     
 }
