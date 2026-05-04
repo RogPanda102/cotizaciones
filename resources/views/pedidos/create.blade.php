@@ -104,7 +104,7 @@
                 <label class="form-label">Dependencia</label>
                 <select name="dependencia_id" class="form-control">
                     @foreach($dependencias as $dep)
-                        <option value="{{ $dep->id }}">{{ $dep->nombre }}</option>
+                        <option value="{{ $dep->id }}">{{ $dep->nombre_oficial }}</option>
                     @endforeach
                 </select>
             </div>

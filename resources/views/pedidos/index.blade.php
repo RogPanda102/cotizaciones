@@ -50,7 +50,7 @@
         @endphp
         <tr class="{{ $clase }}">
             <td>{{ $pedido->cotizacion->folio_externo }}</td>
-            <td>{{ $pedido->dependencia->nombre }}</td>
+            <td>{{ $pedido->dependencia->nombre_oficial }}</td>
             <td>
                 ${{ number_format($pedido->monto_total_aprobado, 2) }}
                 @if($pedido->resultado_tipo === 'perdida')
