@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TipoAlerta;
 use App\Http\Requests\UpdatePedidoRequest;
 use App\Http\Requests\StorePedidoRequest;
 use App\Models\Pedido;
@@ -146,9 +147,8 @@ class PedidoController extends Controller
     public function destroy(Pedido $pedido)
     {
         $pedido->delete();
-
-        return redirect()->route('empresas.pedidos', $pedido->empresa_id)
-            ->with('success', 'Pedido eliminado correctamente.');
+        mensaje('Pedido Eliminado Correctamente!', TipoAlerta::SUCCESS);
+        return redirect()->route('empresas.pedidos', $pedido->empresa_id);
     }
 
     public function porEmpresa($empresaId=0)
