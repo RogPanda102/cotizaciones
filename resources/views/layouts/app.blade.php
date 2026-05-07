@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Sistema de Gestión</title>
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -79,35 +79,35 @@
             display: none !important;
         }
     </style>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
 </head>
 <body>
 
-<header>
-    <div style="display: flex; align-items: center; justify-content: space-between;">
+    <header>
+        <div style="display: flex; align-items: center; justify-content: space-between;">
 
-        <!-- LOGO -->
-        <a href="{{ route('empresas.index') }}" style="display: flex; align-items: center;">
-            <img 
-                src="{{ asset('images/logo-header-2.png') }}" 
-                alt="Inicio"
-                style="height: 40px; margin-right: 20px; cursor: pointer; transition: 0.2s;"
-                onmouseover="this.style.transform='scale(1.1)'"
-                onmouseout="this.style.transform='scale(1)'"
-            >
-        </a>
+            <!-- LOGO -->
+            <a href="{{ route('empresas.index') }}" style="display: flex; align-items: center;">
+                <img 
+                    src="{{ asset('images/logo-header-2.png') }}" 
+                    alt="Inicio"
+                    style="height: 40px; margin-right: 20px; cursor: pointer; transition: 0.2s;"
+                    onmouseover="this.style.transform='scale(1.1)'"
+                    onmouseout="this.style.transform='scale(1)'"
+                >
+            </a>
 
-        <!-- NAV -->
-        <nav>
-            <a href="{{ route('cotizaciones.index') }}">Cotizaciones</a>
-            <a href="{{ route('dependencias.index') }}">Dependencias</a>
-            <a href="{{ route('proveedores.index') }}">Proveedores</a>
-        </nav>
+            <!-- NAV -->
+            <nav>
+                <a href="{{ route('cotizaciones.index') }}">Cotizaciones</a>
+                <a href="{{ route('dependencias.index') }}">Dependencias</a>
+                <a href="{{ route('proveedores.index') }}">Proveedores</a>
+            </nav>
 
-    </div>
-</header>
+        </div>
+    </header>
 
-<div class="container">
+<div class="container" >
 
     @if(session('success'))
         <div class="alert-success">
@@ -115,11 +115,19 @@
         </div>
     @endif
 
+    <div class="content-header">
+        <div class="container-fluid">
+            {!! $breadcrumb !!}
+        </div>
+    </div>
+
     @yield('content')
 
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="//unpkg.com/alpinejs" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

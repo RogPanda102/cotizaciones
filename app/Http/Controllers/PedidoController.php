@@ -66,10 +66,29 @@ class PedidoController extends Controller
     public function show(Pedido $pedido)
     {
         $pedido->load(['compras.proveedor', 'historialEstados']);
-
         $proveedores = Proveedor::all();
 
-        return view('pedidos.show', compact('pedido', 'proveedores'));
+        $datos = array();
+        $datos['nombre_pagina'] = '';
+        $datos['tarea'] = $pedido->empresa->nombre; //ESCRIBIR AQUI NOMBRE DE LA EMPRESA
+
+        $breadcrumb = array
+        (
+            array
+            (
+                'tarea' => 'Pedidos',
+                'href' => route('empresas.pedidos',$pedido->empresa_id)
+            ),
+            array
+            (
+                'tarea' => 'Detalles',
+                'href' => '#'
+            )
+        );
+        $datos['breadcrumb'] = breadcrumb($datos['tarea'], $breadcrumb);
+
+        return view('pedidos.show', array_merge($datos, compact('pedido', 'proveedores')));
+
     }
 
     /**
@@ -113,15 +132,36 @@ class PedidoController extends Controller
             ->with('success', 'Pedido eliminado correctamente.');
     }
 
-    public function porEmpresa($empresaId)
+    public function porEmpresa($empresaId=0)
     {
         $empresa = Empresa::findOrFail($empresaId);
-
         $pedidos = Pedido::where('empresa_id', $empresaId)
             ->with(['cotizacion', 'dependencia'])
             ->latest()
             ->paginate(10);
+            
+        $datos = array();
+        $datos['nombre_pagina'] = '';
+        $datos['tarea'] = $empresa->nombre; //ESCRIBIR AQUI NOMBRE DE LA EMPRESA
 
-        return view('pedidos.index', compact('pedidos', 'empresa'));
+        $breadcrumb = array
+        (
+            array
+            (
+                'tarea' => 'Pedidos',
+                'href' => '#'
+            ),
+        );
+        $datos['breadcrumb'] = breadcrumb($datos['tarea'], $breadcrumb);
+
+        return view('pedidos.index', array_merge($datos, compact('pedidos', 'empresa')));
     }
+
+
+
+
+
+
+
+
 }

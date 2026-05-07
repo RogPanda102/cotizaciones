@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Empresa;
 
+use function PHPUnit\Framework\returnArgument;
+
 class EmpresaController extends Controller
 {
     /**
@@ -13,9 +15,32 @@ class EmpresaController extends Controller
     public function index()
     {
         $empresas = Empresa::all();
-
-        return view('empresas.index', compact('empresas'));
+        $datos = $this->cargar_datos();
+        return view('empresas.index', array_merge($datos, compact('empresas')));
     }
+
+    private function cargar_datos()
+    {
+        $datos = array();
+        $datos['nombre_pagina'] = '';
+        $datos['tarea'] = 'Selecciona una empresa';
+
+        $breadcrumb = array
+        (
+            array
+            (
+                'tarea' => 'Inicio',
+                'href' => '#'
+            )
+        );
+        $datos['breadcrumb'] = breadcrumb($datos['tarea'], $breadcrumb);
+        return $datos;
+    }
+
+
+
+
+
 
     /**
      * Show the form for creating a new resource.

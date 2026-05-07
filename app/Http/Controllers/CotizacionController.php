@@ -16,6 +16,7 @@ class CotizacionController extends Controller
      */
     public function index()
     {
+        $datos = $this->cargar_datos();
         $cotizaciones = Cotizacion::with([
             'empresa',
             'dependencia',
@@ -23,7 +24,7 @@ class CotizacionController extends Controller
             'analista',
             'pedido'
         ])->latest()->get();
-        return view('cotizaciones.index', compact('cotizaciones'));
+        return view('cotizaciones.index', array_merge($datos, compact('cotizaciones')));
     }
 
     private function getFormData(): array
@@ -99,9 +100,9 @@ class CotizacionController extends Controller
         }
         $cotizacion = $service->actualizarCotizacion($cotizacion, $data);
 
-        return redirect()
-            ->route('cotizaciones.show', $cotizacion)
-            ->with('success', 'Cotización actualizada correctamente');
+    return redirect()
+        ->route('cotizaciones.show', $cotizacion)
+        ->with('success', 'Cotización actualizada correctamente');
     } 
 
     /**
@@ -115,5 +116,24 @@ class CotizacionController extends Controller
             ->route('cotizaciones.index')
             ->with('success', 'Cotización eliminada');
     } 
-    
+
+    //ESTA FUNCION CONTROLA EL BREADCRUMB//
+    private function cargar_datos()
+    {
+        $datos = array();
+        $datos['nombre_pagina'] = '';
+        $datos['tarea'] = 'Lista de cotizaciones';
+
+        $breadcrumb = array
+        (
+            array
+            (
+                'tarea' => 'Cotizaciones',
+                'href' => '#'
+            )
+        );
+        $datos['breadcrumb'] = breadcrumb($datos['tarea'], $breadcrumb);
+        return $datos;
+    }
+    //ESTA FUNCION CONTROLA EL BREADCRUMB//
 }

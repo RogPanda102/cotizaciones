@@ -13,7 +13,8 @@ class DependenciaController extends Controller
     public function index()
     {
         $dependencias = Dependencia::all();
-        return view('dependencias.index', compact('dependencias'));
+        $datos = $this->cargar_datos();
+        return view('dependencias.index', array_merge($datos, compact('dependencias')));
     }
 
     /**
@@ -36,39 +37,26 @@ class DependenciaController extends Controller
 
         Dependencia::create($request->all());
 
-        return redirect()->route('dependencias.index')
-                        ->with('success', 'Dependencia creada correctamente');
+        return redirect()->route('dependencias.index')->with('success', 'Dependencia creada correctamente');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    /* public function show(string $id)
+    //ESTA FUNCION CONTROLA EL BREADCRUMB DEL PROGRAMA
+    private function cargar_datos()
     {
-        //
-    } */
+        $datos = array();
+        $datos['nombre_pagina'] = '';
+        $datos['tarea'] = 'Lista de dependencias';
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    /* public function edit(string $id)
-    {
-        //
-    } */
-
-    /**
-     * Update the specified resource in storage.
-     */
-    /* public function update(Request $request, string $id)
-    {
-        //
-    } */
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    /* public function destroy(string $id)
-    {
-        //
-    } */
+        $breadcrumb = array
+        (
+            array
+            (
+                'tarea' => 'Dependencias',
+                'href' => '#'
+            )
+        );
+        $datos['breadcrumb'] = breadcrumb($datos['tarea'], $breadcrumb);
+        return $datos;
+    }
+    //ESTA FUNCION CONTROLA EL BREADCRUMB DEL PROGRAMA
 }

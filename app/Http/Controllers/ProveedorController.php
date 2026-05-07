@@ -15,7 +15,10 @@ class ProveedorController extends Controller
     public function index()
     {
         $proveedores = Proveedor::all();
-        return view('proveedores.index', compact('proveedores'));
+        $datos = $this->cargar_datos();
+
+        return view('proveedores.index', array_merge($datos, compact('proveedores')));
+
     }
 
     /**
@@ -23,11 +26,16 @@ class ProveedorController extends Controller
      */
     public function create()
     {
-        return view('proveedores.create', [
-            'proveedores' => Proveedor::all(),
-            'empresas' => Empresa::all(),
-            'departamentos' => Departamento::all(), // si aplica
-        ]);
+        $datos = $this->cargar_datos2();
+
+        return view('proveedores.create', array_merge(
+            $datos,
+            [
+                'proveedores' => Proveedor::all(),
+                'empresas' => Empresa::all(),
+                'departamentos' => Departamento::all(),
+            ]
+        ));
     }
 
     /**
@@ -48,35 +56,47 @@ class ProveedorController extends Controller
             ->with('success', 'Proveedor creado correctamente');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    //ESTA FUNCION CONTROLA EL BREADCRUMB DEL PROGRAMA
+    private function cargar_datos()
     {
-        //
-    }
+        $datos = array();
+        $datos['nombre_pagina'] = '';
+        $datos['tarea'] = 'Proveedores';
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        $breadcrumb = array
+        (
+            array
+            (
+                'tarea' => 'Proveedores',
+                'href' => '#'
+            )
+        );
+        $datos['breadcrumb'] = breadcrumb($datos['tarea'], $breadcrumb);
+        return $datos;
     }
+    //ESTA FUNCION CONTROLA EL BREADCRUMB DEL PROGRAMA
+    //ESTA FUNCION CONTROLA EL BREADCRUMB DEL PROGRAMA
+    private function cargar_datos2()
+    {
+        $datos = array();
+        $datos['nombre_pagina'] = '';
+        $datos['tarea'] = 'Nuevo Proveedor';
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+        $breadcrumb = array
+        (
+            array
+            (
+                'tarea' => 'Proveedores',
+                'href' => route('proveedores.index')
+            ),
+                        array
+            (
+                'tarea' => 'Nuevo Proveedor',
+                'href' => '#'
+            )
+        );
+        $datos['breadcrumb'] = breadcrumb($datos['tarea'], $breadcrumb);
+        return $datos;
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+    //ESTA FUNCION CONTROLA EL BREADCRUMB DEL PROGRAMA
 }
