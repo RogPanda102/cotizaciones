@@ -2,7 +2,7 @@
 
 @section('content')
 
-<a href="{{ route('empresas.index') }}">← Cambiar empresa</a>
+<a href="{{ route('empresas.index') }} ">← Cambiar empresa</a>
 
 <a href="{{ route('pedidos.create', ['empresa_id' => $empresa->id]) }}" class="btn btn-success">
     Crear Pedido

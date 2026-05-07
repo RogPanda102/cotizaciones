@@ -1,6 +1,7 @@
 <?php
+    use App\Enums\TipoAlerta;
 
-    // =======================
+    // =======================  
     // B R E A D   C R U M B
     // =======================
     function breadcrumb ($tarea = '', $breadcrumb = array())
@@ -37,4 +38,82 @@
         } //END IF SIZEOF
         return $html;
 
+    }
+
+    function mensaje($texto = "",TipoAlerta $tipo = TipoAlerta::INFO,$tiempo = 1000)
+    {
+        $mensaje = array();
+        $mensaje['texto'] = $texto;
+        $mensaje['tipo'] = $tipo->value;
+        $mensaje['tiempo'] = $tiempo;
+        session()->flash('mensaje', $mensaje);
+
+    }//end function
+
+    function mostrar_mensaje()
+    {
+        $html = '';
+
+        $mensaje = session('mensaje');
+
+        // 🔥 Si no existe mensaje
+        if (!$mensaje) {
+            return "";
+        }
+
+        switch($mensaje['tipo']) {
+
+            case TipoAlerta::SUCCESS->value:
+
+                $tipoMensaje = "success";
+                $titulo = "¡Correcto!";
+
+            break;
+
+            case TipoAlerta::DANGER->value:
+
+                $tipoMensaje = "error";
+                $titulo = "¡Error!";
+
+            break;
+
+            case TipoAlerta::WARNING->value:
+
+                $tipoMensaje = "warning";
+                $titulo = "¡Atención!";
+
+            break;
+
+            default:
+
+                $tipoMensaje = "info";
+                $titulo = "¡Bienvenido!";
+
+            break;
+        }
+        session()->forget('mensaje');
+
+        $html = '
+            <script>
+
+                toastr["'.$tipoMensaje.'"](
+                    "'.$mensaje["texto"].'",
+                    "'.$titulo.'",
+                    {
+                        "closeButton": true,
+                        "progressBar": true,
+                        "positionClass": "toast-top-right",
+                        "showDuration": "'.$mensaje["tiempo"].'",
+                        "hideDuration": "1000",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                    }
+                );
+
+            </script>
+        ';
+
+        return $html;
     }
