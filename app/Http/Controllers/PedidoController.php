@@ -42,8 +42,27 @@ class PedidoController extends Controller
         $proveedores = Proveedor::all();
         $departamentos = Departamento::all();
         $empresaId = request('empresa_id');
+        $empresa = Empresa::findOrFail($empresaId);
 
-        return view('pedidos.create', compact('cotizaciones', 'dependencias', 'empresas', 'proveedores', 'departamentos', 'empresaId'));
+        $datos = array();
+        $datos['nombre_pagina'] = '';
+        $datos['tarea'] = $empresa->nombre; //ESCRIBIR AQUI NOMBRE DE LA EMPRESA
+
+        $breadcrumb = array
+        (
+            array
+            (
+                'tarea' => 'Pedidos',
+                'href' => route('empresas.pedidos',$empresaId)
+            ),
+            array
+            (
+                'tarea' => 'Crear pedido',
+                'href' => '#'
+            )
+        );
+        $datos['breadcrumb'] = breadcrumb($datos['tarea'], $breadcrumb);
+        return view('pedidos.create', array_merge($datos, compact('cotizaciones', 'dependencias', 'empresas', 'proveedores', 'departamentos', 'empresaId')));
     }
 
     /**
