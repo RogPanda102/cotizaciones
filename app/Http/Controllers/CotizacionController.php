@@ -53,7 +53,7 @@ class CotizacionController extends Controller
         $cotizacion = $service->crearCotizacion($request->validated());
 
         return redirect()
-            ->route('cotizaciones.show', $cotizacion)
+            ->route('cotizaciones.index', $cotizacion)
             ->with('success', 'Cotización creada correctamente');
     }
 
@@ -69,7 +69,7 @@ class CotizacionController extends Controller
             'analista',
             'pedido'
         ]);
-        return view('cotizaciones.show', compact('cotizacion'));
+        return redirect()->route('cotizaciones.index');
     } 
 
     /**
@@ -100,9 +100,9 @@ class CotizacionController extends Controller
         }
         $cotizacion = $service->actualizarCotizacion($cotizacion, $data);
 
-    return redirect()
-        ->route('cotizaciones.show', $cotizacion)
-        ->with('success', 'Cotización actualizada correctamente');
+        return redirect()
+            ->route('cotizaciones.index', $cotizacion)
+            ->with('success', 'Cotización actualizada correctamente');
     } 
 
     /**

@@ -43,7 +43,7 @@
 
                 <div class="col-md-4">
                     <label>Estado</label>
-                    <select name="estado" x-model="estado" class="form-control" required>
+                    <select name="estado" x-model="estado" class="form-control" required @change="if (estado !== 'enviado') fechaEnvio = ''">
                         <option value="enviado">Enviado</option>
                         <option value="respaldo">Respaldo</option>
                         <option value="no_cotiza">No cotiza</option>
@@ -66,68 +66,71 @@
         <!-- ===================== -->
         <!-- 🔹 BLOQUE 2: RELACIONES -->
         <!-- ===================== -->
-        <div class="card mb-3">
+        <div class="card mb-3" x-show="tipo !== 'cliente_externo'">
             <div class="card-header fw-bold">Relaciones</div>
             <div class="card-body row">
 
-                <div class="col-md-4">
-                    <label>Dependencia</label>
-                    <select name="dependencia_id" class="form-control" x-bind:disabled="tipo === 'cliente_externo'">
-                        <option value="">Seleccionar</option>
-                        <template x-for="dep in dependencias" :key="dep.id">
-                            <option :value="dep.id" x-text="dep.nombre"></option>
-                        </template>
-                    </select>
-                </div>
+                <template x-if="tipo !== 'cliente_externo'">
+                    <div class="col-md-4">
+                        <label>Dependencia</label>
+                        <select name="dependencia_id" class="form-control">
+                            <option value="">Seleccionar</option>
+                            <template x-for="dep in dependencias" :key="dep.id">
+                                <option :value="dep.id" x-text="dep.nombre"></option>
+                            </template>
+                        </select>
+                    </div>
+                </template>
 
-                <div class="col-md-4">
-                    <label>
-                        Departamento
-                    </label>
-                    <select
-                        name="departamento_id"
-                        class="form-control"
-                        x-model="departamentoId"
-                        x-bind:disabled="tipo === 'cliente_externo'">
-                        <option value="">Seleccionar</option>
-                        <template x-for="dep in departamentos" :key="dep.id">
-                            <option :value="dep.id" x-text="departamento.nombre_departamento"></option>
-                        </template>
-                    </select>
-                    <button
-                        type="button"
-                        class="btn btn-outline-primary px-3"
-                        style="white-space: nowrap;"
-                        @click="openModal('departamento')"
-                        x-bind:disabled="tipo === 'cliente_externo'">
-                        Nuevo departamento +
-                    </button>
-                </div>
+                <template x-if="tipo !== 'cliente_externo'">
+                    <div class="col-md-4">
+                        <label>
+                            Departamento
+                        </label>
+                        <select
+                            name="departamento_id"
+                            class="form-control"
+                            x-model="departamentoId">
+                            <option value="">Seleccionar</option>
+                            <template x-for="dep in departamentos" :key="dep.id">
+                                
+                                <option :value="dep.id" x-text="dep.responsable"></option>
+                            </template>
+                        </select>
+                        <button
+                            type="button"
+                            class="btn btn-outline-primary px-3"
+                            style="white-space: nowrap;"
+                            @click="openModal('departamento')">
+                            Nuevo departamento +
+                        </button>
+                    </div>
+                </template>
 
                 <!-- Analista (NO cliente externo) -->
-                <div class="col-md-4" x-show="tipo !== 'cliente_externo'">
-                    <label>
-                        Analista
-                    </label>
-                    <select
-                        name="analista_id"
-                        class="form-control"
-                        x-model="analistaId"
-                        x-bind:disabled="tipo === 'cliente_externo'">
-                        <option value="">Seleccionar</option>
-                        <template x-for="analista in analistas" :key="analista.id">
-                            <option :value="analista.id" x-text="analista.nombre"></option>
-                        </template>
-                    </select>
-                    <button
-                        type="button"
-                        class="btn btn-outline-primary px-3"
-                        style="white-space: nowrap;"
-                        x-on:click="openModal('analista')"
-                        x-bind:disabled="tipo === 'cliente_externo'">
-                        Nuevo analista +
-                    </button>
-                </div>
+                <template x-if="tipo !== 'cliente_externo'">
+                    <div class="col-md-4">
+                        <label>
+                            Analista
+                        </label>
+                        <select
+                            name="analista_id"
+                            class="form-control"
+                            x-model="analistaId">
+                            <option value="">Seleccionar</option>
+                            <template x-for="analista in analistas" :key="analista.id">
+                                <option :value="analista.id" x-text="analista.nombre"></option>
+                            </template>
+                        </select>
+                        <button
+                            type="button"
+                            class="btn btn-outline-primary px-3"
+                            style="white-space: nowrap;"
+                            x-on:click="openModal('analista')">
+                            Nuevo analista +
+                        </button>
+                    </div>
+                </template>
 
             </div>
         </div>
@@ -141,7 +144,12 @@
 
                 <div class="col-md-6">
                     <label>Fecha envío</label>
-                    <input type="date" name="fecha_envio" class="form-control" x-bind:disabled="estado !== 'enviado'" x-bind:required="estado === 'enviado'">
+                    <input type="date" 
+                    name="fecha_envio" 
+                    class="form-control" 
+                    x-model="fechaEnvio"
+                    :readonly="estado !== 'enviado'" 
+                    :required="estado === 'enviado'">
                 </div>
 
                 <div class="col-md-6">
@@ -151,68 +159,77 @@
 
             </div>
         </div>
-        
+
+        <div class="card mb-3">
+            <div class="card-header fw-bold">Garantia</div>
+            <div class="card-body row">
+
+                <div class="col-md-6">
+                    <label>Garantía</label>
+                    <input type="number" name="garantia" class="form-control">
+                </div>
+                <div class="col-md-6">
+                    <label>Monto total</label>
+                    <input type="number" step="0.01" name="monto_total" class="form-control">
+                </div>
+            </div>
+        </div>
+
         <!-- ================== --->
         <!--  BLOQUE 4: HORA Y LUGAR --->
         <!-- =================== --->
 
-        <div class="card mb-3" x-show="tipo !== 'cliente_externo'">
-            <div class="card-header fw-bold">Entrega</div>
-            <div class="card-body row">
+        <template x-if="tipo !== 'cliente_externo'">
+            <div class="card mb-3">
+                <div class="card-header fw-bold">Entrega</div>
+                <div class="card-body row">
 
-                <div class="col-md-6">
-                    <label>Horario de entrega</label>
-                    <input type="time"
-                        name="horario_de_entrega"
-                        class="form-control"
-                        x-bind:disabled="tipo === 'cliente_externo'">
+                    <div class="col-md-6">
+                        <label>Horario de entrega</label>
+                        <input type="time"
+                            name="horario_de_entrega"
+                            class="form-control">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Lugar de entrega</label>
+                        <input type="text"
+                            name="lugar_de_entrega"
+                            class="form-control">
+                    </div>
+
                 </div>
-
-                <div class="col-md-6">
-                    <label>Lugar de entrega</label>
-                    <input type="text"
-                        name="lugar_de_entrega"
-                        class="form-control"
-                        x-bind:disabled="tipo === 'cliente_externo'">
-                </div>
-
             </div>
-        </div>
+        </template>
 
         <!-- ===================== -->
         <!-- 🔹 BLOQUE 4: FINANCIEROS -->
         <!-- ===================== -->
 
         <!-- SOLO OMG -->
-        <div class="card mb-3" x-show="tipo === 'omg'">
-            <div class="card-header fw-bold">Financieros</div>
-            <div class="card-body row">
+        <template x-if="tipo === 'omg'">
+            <div class="card mb-3">
+                <div class="card-header fw-bold">Financieros</div>
+                <div class="card-body row">
 
-                <div class="col-md-3">
-                    <label>Monto total</label>
-                    <input type="number" step="0.01" name="monto_total" class="form-control" x-bind:disabled="tipo !== 'omg'">
+                    
+                    <div class="col-md-3">
+                        <label>Días crédito</label>
+                        <input type="number" name="dias_credito" class="form-control">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>Tipo días</label>
+                        <select name="tipo_dias" class="form-control">
+                            <option value="naturales">Naturales</option>
+                            <option value="habiles">Hábiles</option>
+                        </select>
+                    </div>
+
+
                 </div>
-
-                <div class="col-md-3">
-                    <label>Días crédito</label>
-                    <input type="number" name="dias_credito" class="form-control" x-bind:disabled="tipo !== 'omg'">
-                </div>
-
-                <div class="col-md-3">
-                    <label>Tipo días</label>
-                    <select name="tipo_dias" class="form-control" x-bind:disabled="tipo !== 'omg'">
-                        <option value="naturales">Naturales</option>
-                        <option value="habiles">Hábiles</option>
-                    </select>
-                </div>
-
-                <div class="col-md-3">
-                    <label>Garantía</label>
-                    <input type="number" name="garantia" class="form-control" x-bind:disabled="tipo !== 'omg'">
-                </div>
-
             </div>
-        </div>
+        </template>
 
         <!-- ===================== -->
         <!-- 🔘 BOTÓN -->
@@ -338,12 +355,13 @@ function cotizacionForm() {
     return {
         tipo: '{{ old('tipo_cotizacion') }}',
         estado: '{{ old('estado', 'enviado') }}',
+        fechaEnvio: '{{ old('fecha_envio') }}',
         dependenciaId: '{{ old('dependencia_id') }}',
         analistaId: '{{ old('analista_id') }}',
         departamentoId: '{{ old('departamento_id') }}',
         dependencias: @json($dependencias->map(fn($d) => ['id' => $d->id, 'nombre' => $d->nombre_oficial])->values()),
         analistas: @json($analistasJson),
-        departamentos: @json($departamentos->map(fn($d) => ['id' => $d->id, 'nombre' => $d->nombre_departamento])->values()),
+        departamentos: @json($departamentos->map(fn($d) => ['id' => $d->id, 'responsable' => $d->responsable])->values()),
         departamentoDetectado: null,
         modal: {
             open: false,
@@ -452,7 +470,7 @@ function cotizacionForm() {
             if (!this.departamentos.some(dep => String(dep.id) === String(this.departamentoDetectado.id))) {
                 this.departamentos.push({
                     id: this.departamentoDetectado.id,
-                    nombre,
+                    responsable: this.departamentoDetectado.responsable,
                 });
             }
 
