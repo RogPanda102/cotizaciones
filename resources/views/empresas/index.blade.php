@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<h2>Selecciona una empresa</h2>
 
 <div style="display: flex; gap: 30px; justify-content: center; margin-top: 40px;">
 

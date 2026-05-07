@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<h2>Lista de Dependencias</h2>
 
 <a href="{{ route('dependencias.create') }}">Nueva Dependencia</a>
 

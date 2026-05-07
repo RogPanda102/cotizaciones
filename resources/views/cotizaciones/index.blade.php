@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<h2>Lista de Cotizaciones</h2>
 
 <a href="{{ route('cotizaciones.create') }}">
     Nueva Cotización
