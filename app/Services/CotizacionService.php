@@ -17,6 +17,7 @@ class CotizacionService
 
             $data = $this->aplicarReglasPorTipo($data);
             $data = $this->aplicarReglasPorEstado($data);
+           
 
             $cotizacion = Cotizacion::create($this->filtrarCampos($data));
 
@@ -97,9 +98,6 @@ class CotizacionService
     {
         if (!isset($data['estado'])) {
             return $data;
-        }
-        if (empty($data['monto_total'])) {
-            $data = $this->limpiarCamposFinancieros($data);
         }
         // 🔥 Regla 1: no cotiza → no hay monto
         if ($data['estado'] === EstadoCotizacion::NO_COTIZA->value) {
