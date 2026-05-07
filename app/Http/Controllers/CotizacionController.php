@@ -42,7 +42,28 @@ class CotizacionController extends Controller
      */
     public function create()
     {
-        return view('cotizaciones.create', $this->getFormData());
+        
+        $datos = array();
+        $datos['nombre_pagina'] = '';
+        $datos['tarea'] = 'Crear cotizacion';
+
+        $breadcrumb = array
+        (
+            array
+            (
+                'tarea' => 'Cotizaciones',
+                'href' => route('cotizaciones.index')
+            ),
+            array
+            (
+                'tarea' => 'Nueva cotizacion',
+                'href' => '#'
+            )
+        );
+        $datos['breadcrumb'] = breadcrumb($datos['tarea'], $breadcrumb);
+
+        return view('cotizaciones.create', $this->getFormData(), $datos);
+
     }
 
     /**
