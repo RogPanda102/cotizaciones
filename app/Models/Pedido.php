@@ -238,14 +238,6 @@ class Pedido extends Model
         if ($this->resultado < 0) return 'perdida';
         return 'equilibrio';
     }
-    // funcion para que dias restantes funcione en todo el codigo
-    public function getDiasRestantesAttribute()
-    {
-        return match($this->tipo) {
-            'licencia' => $this->dias_restantes_licencia,
-            default => $this->dias_restantes_entrega,
-        };
-    }
     // función por tipo que muestra el resultado formateado para pedidos/tabs/finanzas
     public function getResultadoFormateadoAttribute()
     {

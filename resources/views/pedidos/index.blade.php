@@ -77,7 +77,7 @@
 
             <td>{{ $pedido->fecha_entrega?->format('d/m/Y') }}</td>
             
-            <td>{{ $pedido->dias_restantes }}</td>
+            <td>{{ $pedido->dias_restantes_entrega }}</td>
 
             
             
