@@ -15,22 +15,7 @@ enum EstadoCotizacion: string
             self::NO_COTIZA     => 'No cotizada',
         };
     }
-    public function puedeTransicionarA(self $nuevo): bool
-    {
-        return match ($this) {
-            self::ENVIADO => in_array($nuevo, [
-                self::RESPALDO,
-                self::NO_COTIZA
-            ]),
-
-            self::RESPALDO => in_array($nuevo, [
-                self::ENVIADO,
-                self::NO_COTIZA
-            ]),
-
-            self::NO_COTIZA => false, // estado final
-        };
-    }
+    
 
     public function color(): string
     {

@@ -108,17 +108,7 @@ class CotizacionController extends Controller
     {
         $data = $request->validated();
 
-        // Validar transición de estado
-        if (isset($data['estado'])) {
-            $estadoActual = EstadoCotizacion::from($cotizacion->estado);
-            $nuevoEstado = EstadoCotizacion::from($data['estado']);
-
-            if (!$estadoActual->puedeTransicionarA($nuevoEstado)) {
-                return back()->withErrors([
-                    'estado' => 'Transición de estado no permitida.'
-                ]);
-            }
-        }
+        
         $cotizacion = $service->actualizarCotizacion($cotizacion, $data);
 
         return redirect()
