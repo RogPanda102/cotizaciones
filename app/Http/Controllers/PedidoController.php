@@ -11,6 +11,7 @@ use App\Models\Empresa;
 use App\Models\Departamento;
 use App\Models\Cotizacion;
 use App\Models\Proveedor;
+use App\Models\Analista;
 
 class PedidoController extends Controller
 {
@@ -41,6 +42,7 @@ class PedidoController extends Controller
         $empresas = Empresa::all();
         $proveedores = Proveedor::all();
         $departamentos = Departamento::all();
+        $analistas = Analista::all();
         $empresaId = request('empresa_id');
         $empresa = Empresa::findOrFail($empresaId);
 
@@ -62,7 +64,7 @@ class PedidoController extends Controller
             )
         );
         $datos['breadcrumb'] = breadcrumb($datos['tarea'], $breadcrumb);
-        return view('pedidos.create', array_merge($datos, compact('cotizaciones', 'dependencias', 'empresas', 'proveedores', 'departamentos', 'empresaId')));
+        return view('pedidos.create', array_merge($datos, compact('cotizaciones', 'dependencias', 'empresas', 'proveedores', 'departamentos', 'analistas', 'empresaId')));
     }
 
     /**

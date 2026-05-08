@@ -26,7 +26,10 @@ class StorePedidoRequest extends FormRequest
             'dependencia_id' => 'required|exists:dependencias,id',
             'empresa_id' => 'required|exists:empresas,id',
             'departamento_id' => 'required|exists:departamentos,id',
+            'analista_id' => 'nullable|exists:analistas,id',
             'proveedor_id' => 'nullable|exists:proveedores,id',
+            'lugar_entrega' => 'nullable|string|max:255',
+            'condiciones_entrega' => 'nullable|string',
 
             'monto_total_aprobado' => 'required|numeric|min:0',
             'fecha_adjudicacion' => 'required|date',

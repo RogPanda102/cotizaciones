@@ -26,7 +26,7 @@
         <h5 class="mb-3">Datos generales</h5>
 
         <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <label class="form-label">Cotización</label>
                 <select name="cotizacion_id" class="form-control w-100">
                     @foreach($cotizaciones as $cot)
@@ -35,7 +35,7 @@
                 </select>
             </div>
 
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <label class="form-label">Empresa</label>
                 <select name="empresa_id" class="form-control w-100">
                     @foreach($empresas as $empresa)
@@ -47,20 +47,30 @@
                     @endforeach
                 </select>
             </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Dependencia</label>
+                <select name="dependencia_id" class="form-control">
+                    <option value="">Seleccionar dependencia</option>
+                    @foreach($dependencias as $dep)
+                        <option value="{{ $dep->id }}">{{ $dep->nombre_oficial }}</option>
+                    @endforeach
+                </select>
+            </div>
         </div>
 
         <hr>
 
         {{-- 🔹 DEPARTAMENTO / PROVEEDOR --}}
-        <h5 class="mb-3">Departamento y proveedor</h5>
+        <h5 class="mb-3">Departamento, analista y proveedor</h5>
 
         <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <label class="form-label">Departamento</label>
-                <select name="departamento_id" id="departamentoSelect" class="form-control w-100">
+                <select name="departamento_id" id="departamentoSelect" class="form-control w-100" x-model="departamentoId">
                     <option value="">Selecciona departamento</option>
                     @foreach($departamentos as $departamento)
-                        <option value="{{ $departamento->id }}">
+                        <option value="{{ $departamento->id }}" {{ old('departamento_id') == $departamento->id ? 'selected' : '' }}>
                             {{ $departamento->nombre_departamento }} - {{ $departamento->responsable }}
                         </option>
                     @endforeach
@@ -71,7 +81,29 @@
                 </button>
             </div>
 
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Analista</label>
+                <select name="analista_id" id="analistaSelect" class="form-control w-100" x-model="analistaId">
+                    <option value="">Selecciona analista</option>
+                    @foreach($analistas as $analista)
+                        @php
+                            $nombreCompleto = trim(implode(' ', array_filter([
+                                $analista->nombre,
+                                $analista->apellido_paterno,
+                                $analista->apellido_materno,
+                            ])));
+                        @endphp
+                        <option value="{{ $analista->id }}" {{ old('analista_id') == $analista->id ? 'selected' : '' }}>
+                            {{ $nombreCompleto }}
+                        </option>
+                    @endforeach
+                </select>
+                <button type="button" class="btn btn-outline-secondary mt-2" data-bs-toggle="modal" data-bs-target="#modalAnalista">
+                    + Nuevo analista
+                </button>
+            </div>
+
+            <div class="col-md-4 mb-3">
                 <label class="form-label">Proveedor</label>
                 <select name="proveedor_id" class="form-control w-100">
                     <option value="">Selecciona proveedor</option>
@@ -101,12 +133,15 @@
             </div>
 
             <div class="col-md-6 mb-3">
-                <label class="form-label">Dependencia</label>
-                <select name="dependencia_id" class="form-control">
-                    @foreach($dependencias as $dep)
-                        <option value="{{ $dep->id }}">{{ $dep->nombre_oficial }}</option>
-                    @endforeach
-                </select>
+                <label class="form-label">Lugar de entrega</label>
+                <input type="text" name="lugar_entrega" class="form-control" value="{{ old('lugar_entrega') }}" placeholder="Lugar de entrega">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-3">
+                <label class="form-label">Condición de entrega</label>
+                <textarea name="condiciones_entrega" class="form-control" rows="2" placeholder="Condiciones de entrega">{{ old('condiciones_entrega') }}</textarea>
             </div>
         </div>
 
@@ -232,6 +267,41 @@
 </div>
 </div>
 </div>
+
+<div class="modal fade" id="modalAnalista" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Nuevo Analista</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <input type="text" id="nuevo_analista_nombre" class="form-control" placeholder="Nombre">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <input type="text" id="nuevo_analista_apellido_paterno" class="form-control" placeholder="Apellido paterno">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <input type="text" id="nuevo_analista_apellido_materno" class="form-control" placeholder="Apellido materno">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <input type="text" id="nuevo_analista_telefono" class="form-control" placeholder="Teléfono">
+                </div>
+                <div class="col-12 mb-3">
+                    <input type="email" id="nuevo_analista_email" class="form-control" placeholder="Email">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" onclick="guardarAnalista()">Guardar</button>
+        </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="modalDepartamento" tabindex="-1">
   <div class="modal-dialog modal-lg"> <!-- lg = más ancho -->
     <div class="modal-content">
@@ -292,7 +362,9 @@ let departamentoDetectado = null;
 
 function pedidoForm() {
     return {
-        tipo: '{{ old('tipo') }}'
+        tipo: '{{ old('tipo') }}',
+        departamentoId: '{{ old('departamento_id') }}',
+        analistaId: '{{ old('analista_id') }}'
     }
 }
 
@@ -301,6 +373,58 @@ function cerrarModalDepartamento() {
     const modalEl = document.getElementById('modalDepartamento');
     const modal = bootstrap.Modal.getInstance(modalEl);
     if (modal) modal.hide();
+}
+
+function cerrarModalAnalista() {
+    const modalEl = document.getElementById('modalAnalista');
+    const modal = bootstrap.Modal.getInstance(modalEl);
+    if (modal) modal.hide();
+}
+
+function guardarAnalista() {
+    const payload = {
+        nombre: (document.getElementById('nuevo_analista_nombre').value || '').trim(),
+        apellido_paterno: (document.getElementById('nuevo_analista_apellido_paterno').value || '').trim(),
+        apellido_materno: (document.getElementById('nuevo_analista_apellido_materno').value || '').trim(),
+        telefono: (document.getElementById('nuevo_analista_telefono').value || '').trim(),
+        email: (document.getElementById('nuevo_analista_email').value || '').trim().toLowerCase(),
+    };
+
+    if (!payload.nombre || !payload.apellido_paterno) {
+        alert('Nombre y apellido paterno son obligatorios');
+        return;
+    }
+
+    fetch('{{ route('analistas.store') }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+        },
+        body: JSON.stringify(payload),
+    })
+    .then(async res => {
+        const data = await res.json();
+        if (!res.ok) {
+            throw new Error(data.message || 'Error al guardar analista');
+        }
+        return data;
+    })
+    .then(analista => {
+        const select = document.getElementById('analistaSelect');
+        const option = document.createElement('option');
+        option.value = analista.id;
+        option.text = analista.nombre;
+        select.appendChild(option);
+        select.value = analista.id;
+
+        cerrarModalAnalista();
+    })
+    .catch(error => {
+        console.error(error);
+        alert('Ocurrió un error al guardar el analista');
+    });
 }
 
 // 🔥 GUARDAR DEPARTAMENTO
