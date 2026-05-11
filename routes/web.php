@@ -19,7 +19,9 @@
     Route::resource('cotizaciones', CotizacionController::class);
     Route::resource('pedidos', PedidoController::class);
     Route::resource('compras', CompraController::class);
-    Route::resource('proveedores', ProveedorController::class);
+    Route::resource('proveedores', ProveedorController::class) ->parameters([
+        'proveedores' => 'proveedor'
+    ]);
     Route::get('/empresas', [EmpresaController::class, 'index'])->name('empresas.index');
     Route::get('/empresas/{empresa}/pedidos', [PedidoController::class, 'porEmpresa'])->name('empresas.pedidos');
     Route::get('/departamentos/buscar', [DepartamentoController::class, 'buscar'])->name('departamentos.buscar');

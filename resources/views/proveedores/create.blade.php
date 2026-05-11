@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<h1>Nuevo Proveedor</h1>
 
 <form method="POST" action="{{ route('proveedores.store') }}">
     @csrf
