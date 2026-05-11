@@ -15,9 +15,8 @@ class ProveedorController extends Controller
     public function index()
     {
         $proveedores = Proveedor::all();
-        $datos = $this->cargar_datos();
 
-        return view('proveedores.index', array_merge($datos, compact('proveedores')));
+        return view('proveedores.index', array_merge($this->cargar_datos(), compact('proveedores')));
 
     }
 
@@ -26,15 +25,13 @@ class ProveedorController extends Controller
      */
     public function create()
     {
-        $datos = $this->cargar_datos2();
+        $proveedores = Proveedor::all();
+        $empresas = Empresa::all();
+        $departamentos = Departamento::all();
 
         return view('proveedores.create', array_merge(
-            $datos,
-            [
-                'proveedores' => Proveedor::all(),
-                'empresas' => Empresa::all(),
-                'departamentos' => Departamento::all(),
-            ]
+            $this->cargar_datos2(),
+            compact('empresas', 'departamentos', 'proveedores')
         ));
     }
 
@@ -50,10 +47,51 @@ class ProveedorController extends Controller
             'email' => 'nullable|email|max:255',
         ]);
 
-        Proveedor::create($request->all());
+        Proveedor::create($request->only(['empresa', 'nombre_contacto', 'telefono', 'email']));
 
         return redirect()->route('proveedores.index')
             ->with('success', 'Proveedor creado correctamente');
+    }
+    
+    public function edit(Proveedor $proveedor)
+    {
+        $empresas = Empresa::all();
+        $departamentos = Departamento::all();
+
+        return view('proveedores.edit', array_merge(
+            $this->cargar_datos3(),
+            compact(
+                'proveedor',
+                'empresas',
+                'departamentos'
+            )
+        ));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Proveedor $proveedor)
+    {
+        $request->validate([
+            'empresa' => 'required|string|max:255',
+            'nombre_contacto' => 'nullable|string|max:255',
+            'telefono' => 'nullable|string|max:50',
+            'email' => 'nullable|email|max:255',
+        ]);
+
+        $proveedor->update(
+            $request->only([
+                'empresa',
+                'nombre_contacto',
+                'telefono',
+                'email'
+            ])
+        );
+
+        return redirect()
+            ->route('proveedores.index')
+            ->with('success', 'Proveedor actualizado correctamente');
     }
 
     //ESTA FUNCION CONTROLA EL BREADCRUMB DEL PROGRAMA
@@ -99,4 +137,28 @@ class ProveedorController extends Controller
         return $datos;
     }
     //ESTA FUNCION CONTROLA EL BREADCRUMB DEL PROGRAMA
+    private function cargar_datos3()
+    {
+        $datos = [];
+        $datos['nombre_pagina'] = '';
+        $datos['tarea'] = 'Editar Proveedor';
+
+        $breadcrumb = [
+            [
+                'tarea' => 'Proveedores',
+                'href' => route('proveedores.index')
+            ],
+            [
+                'tarea' => 'Editar Proveedor',
+                'href' => '#'
+            ]
+        ];
+
+        $datos['breadcrumb'] = breadcrumb(
+            $datos['tarea'],
+            $breadcrumb
+        );
+
+        return $datos;
+    }
 }
