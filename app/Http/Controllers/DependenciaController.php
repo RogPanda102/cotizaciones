@@ -13,7 +13,15 @@ class DependenciaController extends Controller
     public function index()
     {
         $dependencias = Dependencia::all();
-        $datos = $this->cargar_datos();
+        $datos = $this->cargarDatos(
+            'Dependencias',
+            [
+                [
+                    'tarea' => 'Dependencias',
+                    'href' => '#',
+                ]
+            ]
+        );
         return view('dependencias.index', array_merge($datos, compact('dependencias')));
     }
 
@@ -22,7 +30,20 @@ class DependenciaController extends Controller
      */
     public function create()
     {
-        return view('dependencias.create');
+        $datos = $this->cargarDatos(
+            'Crear dependencia',
+            [
+                [
+                    'tarea' => 'Dependencias',
+                    'href' => route('dependencias.index'),
+                ],
+                [
+                    'tarea' => 'Crear dependencia',
+                    'href' => '#',
+                ]
+            ]
+        );
+        return view('dependencias.create', $datos);
     }
 
     /**
@@ -35,28 +56,61 @@ class DependenciaController extends Controller
             'nombre_corto' => 'nullable|string|max:255',
         ]);
 
-        Dependencia::create($request->all());
+        Dependencia::create(
+            $request->only([
+                'nombre_oficial',
+                'nombre_corto',
+            ])
+        );
 
         return redirect()->route('dependencias.index')->with('success', 'Dependencia creada correctamente');
     }
 
-    //ESTA FUNCION CONTROLA EL BREADCRUMB DEL PROGRAMA
-    private function cargar_datos()
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Dependencia $dependencia)
     {
-        $datos = array();
-        $datos['nombre_pagina'] = '';
-        $datos['tarea'] = 'Lista de dependencias';
-
-        $breadcrumb = array
-        (
-            array
-            (
-                'tarea' => 'Dependencias',
-                'href' => '#'
-            )
+        $datos = $this->cargarDatos(
+            'Editar dependencia',
+            [
+                [
+                    'tarea' => 'Dependencias',
+                    'href' => route('dependencias.index'),
+                ],
+                [
+                    'tarea' => 'Editar dependencia',
+                    'href' => '#',
+                ]
+            ]
         );
-        $datos['breadcrumb'] = breadcrumb($datos['tarea'], $breadcrumb);
-        return $datos;
+
+        return view('dependencias.edit', array_merge($datos, compact('dependencia')));
     }
-    //ESTA FUNCION CONTROLA EL BREADCRUMB DEL PROGRAMA
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Dependencia $dependencia)
+    {
+        $request->validate([
+            'nombre_oficial' => 'required|string|max:255',
+            'nombre_corto'   => 'nullable|string|max:255',
+        ]);
+
+        $dependencia->update($request->only(['nombre_oficial', 'nombre_corto']));
+
+        return redirect()
+            ->route('dependencias.index')
+            ->with('success', 'Dependencia actualizada correctamente');
+    }
+
+    private function cargarDatos(string $tarea, array $breadcrumb)
+    {
+        return [
+            'nombre_pagina' => '',
+            'tarea' => $tarea,
+            'breadcrumb' => breadcrumb($tarea, $breadcrumb),
+        ];
+    }
 }

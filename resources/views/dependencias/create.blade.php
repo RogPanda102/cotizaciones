@@ -1,4 +1,5 @@
-<h2>Crear Dependencia</h2>
+@extends('layouts.app')
+@section('content')
 
 <form action="{{ route('dependencias.store') }}" method="POST">
     @csrf
@@ -11,3 +12,4 @@
 
     <button type="submit">Guardar</button>
 </form>
+@endsection
