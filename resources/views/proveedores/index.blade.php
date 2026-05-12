@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 <a href="{{ route('proveedores.create') }}">Nuevo proveedor</a>
 
 <table>

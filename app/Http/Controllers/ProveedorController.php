@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TipoAlerta;
 use Illuminate\Http\Request;
 use App\Models\Proveedor;
 use App\Models\Empresa;
@@ -47,10 +48,10 @@ class ProveedorController extends Controller
             'email' => 'nullable|email|max:255',
         ]);
 
-        Proveedor::create($request->only(['empresa', 'nombre_contacto', 'telefono', 'email']));
-
-        return redirect()->route('proveedores.index')
-            ->with('success', 'Proveedor creado correctamente');
+        Proveedor::create($request->all());
+        mensaje('Proovedor Agregado',TipoAlerta::SUCCESS);
+        return redirect()->route('proveedores.index');
+        
     }
     
     public function edit(Proveedor $proveedor)
