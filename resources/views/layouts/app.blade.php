@@ -79,6 +79,30 @@
         [x-cloak] {
             display: none !important;
         }
+
+        .texto-bienvenida {
+
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+
+            animation: aparecer 2s ease;
+        }
+
+        @keyframes aparecer {
+
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+        }
+
     </style>
     
 </head>
@@ -87,16 +111,28 @@
     <header>
         <div style="display: flex; align-items: center; justify-content: space-between;">
 
-            <!-- LOGO -->
-            <a href="{{ route('empresas.index') }}" style="display: flex; align-items: center;">
-                <img 
-                    src="{{ asset('images/logo-header-2.png') }}" 
-                    alt="Inicio"
-                    style="height: 40px; margin-right: 20px; cursor: pointer; transition: 0.2s;"
-                    onmouseover="this.style.transform='scale(1.1)'"
-                    onmouseout="this.style.transform='scale(1)'"
-                >
-            </a>
+            <!-- IZQUIERDA -->
+            <div style="display: flex; align-items: center; gap: 8px;">
+
+                <!-- LOGO -->
+                <a href="{{ route('empresas.index') }}" style="display: flex; align-items: center;">
+
+                    <img 
+                        src="{{ asset('images/logo-header-2.png') }}" 
+                        alt="Inicio"
+                        style="height: 40px; cursor: pointer; transition: 0.2s;"
+                        onmouseover="this.style.transform='scale(1.1)'"
+                        onmouseout="this.style.transform='scale(1)'"
+                    >
+
+                </a>
+
+                <!-- TEXTO -->
+                <span class="texto-bienvenida">
+                    Bienvenido al Sistema de Gestión
+                </span>
+
+            </div>
 
             <!-- NAV -->
             <nav>

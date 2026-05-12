@@ -77,9 +77,8 @@ class PedidoController extends Controller
         $pedido = $this->pedidoService->crearPedido(
             $request->validated()
         );
-
-        return redirect()->route('empresas.pedidos', $pedido->empresa_id)
-            ->with('success', 'Pedido creado correctamente');
+        mensaje('Tu pedido ha sido creado',TipoAlerta::SUCCESS);
+        return redirect()->route('empresas.pedidos', $pedido->empresa_id);
     }
 
     /**
@@ -140,8 +139,8 @@ class PedidoController extends Controller
                 ->withInput();
         }
 
-        return redirect()->route('empresas.pedidos', $pedido->empresa_id)
-            ->with('success', 'Pedido actualizado correctamente.');
+        mensaje('El estado ha sido modificado',TipoAlerta::WARNING);
+        return redirect()->route('pedidos.show', $pedido->id);
     }
     /**
      * Remove the specified resource from storage.

@@ -8,6 +8,7 @@ use App\Models\Compra;
 use App\Models\Proveedor;
 use App\Http\Requests\StoreCompraRequest;
 use App\Http\Requests\UpdateCompraRequest;
+use App\Enums\TipoAlerta;
 
 class CompraController extends Controller
 {
@@ -41,9 +42,8 @@ class CompraController extends Controller
     }
 
         Compra::create($request->validated());
-
-        return redirect()->route('pedidos.show', $pedido->id)
-            ->with('success', 'Compra registrada correctamente.');
+        mensaje('Tu compra ha sido registrada',TipoAlerta::SUCCESS);
+        return redirect()->route('pedidos.show', $pedido->id);
     }
 
     /**
@@ -59,9 +59,34 @@ class CompraController extends Controller
      */
     public function edit(Compra $compra)
     {
-            $proveedores = Proveedor::all();
+        $proveedores = Proveedor::all();
 
-            return view('compras.edit', compact('compra', 'proveedores'));
+        $pedido = $compra->pedido;
+
+        $datos = array();
+        $datos['nombre_pagina'] = '';
+        $datos['tarea'] = 'Selecciona una empresa';
+
+        $breadcrumb = array
+        (
+            array
+            (
+                'tarea' => 'Pedidos',
+                'href' => route('empresas.pedidos',$pedido->empresa_id)
+            ),
+                        array
+            (
+                'tarea' => 'Detalles',
+                'href' => route('pedidos.show', $pedido->id)
+            ),
+                        array
+            (
+                'tarea' => 'Editar Compra',
+                'href' => '#'
+            )
+        );
+            $datos['breadcrumb'] = breadcrumb($datos['tarea'], $breadcrumb);
+            return view('compras.edit', array_merge($datos, compact('compra', 'proveedores')));
     }
 
     /**
@@ -78,9 +103,8 @@ class CompraController extends Controller
         }
 
         $compra->update($request->validated());
-
-        return redirect()->route('pedidos.show', $compra->pedido_id)
-            ->with('success', 'Compra actualizada.');
+        mensaje('Compra modificada',TipoAlerta::SUCCESS);
+        return redirect()->route('pedidos.show', $compra->pedido_id);
     }
 
     /**
@@ -89,6 +113,7 @@ class CompraController extends Controller
     public function destroy(Compra $compra)
     {
         $pedido = $compra->pedido;
+        mensaje('Compra Eliminada Correctamente!', TipoAlerta::SUCCESS);
 
         if (!$pedido->puedeEditarCompras()) {
             abort(403, 'Las compras están bloqueadas.');
@@ -97,7 +122,7 @@ class CompraController extends Controller
         $pedidoId = $compra->pedido_id;
         $compra->delete();
 
-        return redirect()->route('pedidos.show', $pedidoId)
-            ->with('success', 'Compra eliminada.');
+        return redirect()->route('pedidos.show', $pedidoId);
     }
+
 }

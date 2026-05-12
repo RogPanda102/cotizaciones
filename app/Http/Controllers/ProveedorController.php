@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TipoAlerta;
 use Illuminate\Http\Request;
 use App\Models\Proveedor;
 use App\Models\Empresa;
@@ -51,9 +52,9 @@ class ProveedorController extends Controller
         ]);
 
         Proveedor::create($request->all());
-
-        return redirect()->route('proveedores.index')
-            ->with('success', 'Proveedor creado correctamente');
+        mensaje('Proovedor Agregado',TipoAlerta::SUCCESS);
+        return redirect()->route('proveedores.index');
+        
     }
 
     //ESTA FUNCION CONTROLA EL BREADCRUMB DEL PROGRAMA
