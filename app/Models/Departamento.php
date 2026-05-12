@@ -19,4 +19,9 @@ class Departamento extends Model
     {
         return $this->hasMany(Pedido::class);
     }
+
+    public function dependencia()
+    {
+        return $this->belongsTo(Dependencia::class);
+    }
 }
