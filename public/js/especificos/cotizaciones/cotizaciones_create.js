@@ -1,179 +1,105 @@
 function cotizacionForm() {
 
     return {
-
         tipo: window.cotizacionData.old.tipo ?? '',
         estado: window.cotizacionData.old.estado ?? 'enviado',
         fechaEnvio: window.cotizacionData.old.fechaEnvio ?? '',
         dependenciaId: window.cotizacionData.old.dependenciaId ?? '',
-
         analistaId: window.cotizacionData.old.analistaId ?? '',
-
         departamentoId: window.cotizacionData.old.departamentoId ?? '',
-
         dependencias: window.cotizacionData.dependencias ?? [],
-
         analistas: window.cotizacionData.analistas ?? [],
-
         departamentos: window.cotizacionData.departamentos ?? [],
-
         departamentoDetectado: null,
-
         modal: {
-
             open: false,
-
             type: '',
-
             endpoint: '',
-
             title: '',
-
             form: {},
-
             saving: false,
-
             error: '',
-
         },
-
         getEmptyForm(type) {
-
             if (type === 'analista') {
-
                 return {
-
                     nombre: '',
-
                     apellido_paterno: '',
-
                     apellido_materno: '',
-
                     email: '',
-
                     telefono: '',
-
                 };
-
             }
 
             return {
-
                 dependencia_id: this.dependenciaId
                     ? String(this.dependenciaId)
                     : '',
-
                 nombre_departamento: '',
-
                 responsable: '',
-
                 telefono: '',
-
                 email: '',
-
                 direccion: '',
-
             };
-
         },
-
         openModal(type) {
-
             const config = {
-
                 analista: {
-
                     endpoint: window.cotizacionData.routes.analistasStore,
-
                     title: 'Nuevo analista',
-
                 },
-
                 departamento: {
-
                     endpoint: window.cotizacionData.routes.departamentosStore,
-
                     title: 'Nuevo departamento',
-
                 },
-
             };
-
             if (!config[type]) {
                 return;
             }
-
             this.modal.type = type;
-
             this.modal.endpoint = config[type].endpoint;
-
             this.modal.title = config[type].title;
-
             this.modal.form = this.getEmptyForm(type);
-
             this.modal.error = '';
-
             this.departamentoDetectado = null;
-
             this.modal.open = true;
-
         },
 
         closeModal() {
-
             this.modal.open = false;
-
             this.modal.type = '';
-
             this.modal.endpoint = '';
-
             this.modal.title = '';
-
             this.modal.form = {};
-
             this.modal.saving = false;
-
             this.modal.error = '';
-
             this.departamentoDetectado = null;
 
         },
 
         normalizarTelefono(value) {
-
             return (value || '').replace(/\D/g, '');
-
         },
-
         async buscarDepartamentoExistente() {
-
             if (this.modal.type !== 'departamento') {
                 return;
             }
-
             const email = (this.modal.form.email || '')
                 .trim()
                 .toLowerCase();
-
             const telefono = this.normalizarTelefono(
                 this.modal.form.telefono
             );
-
             if (!email && !telefono) {
-
                 this.departamentoDetectado = null;
-
                 return;
-
             }
 
             try {
-
                 const query = new URLSearchParams({
                     email,
                     telefono
                 });
-
                 const response = await fetch(
                     `${window.cotizacionData.routes.departamentosBuscar}?${query.toString()}`,
                     {
@@ -184,32 +110,22 @@ function cotizacionForm() {
                 );
 
                 if (!response.ok) {
-
                     this.departamentoDetectado = null;
-
                     return;
-
                 }
-
                 const departamento = await response.json();
-
                 this.departamentoDetectado =
                     departamento && departamento.id
                         ? departamento
                         : null;
 
             } catch (error) {
-
                 console.error(error);
-
                 this.departamentoDetectado = null;
-
             }
-
         },
 
         usarDepartamentoExistente() {
-
             if (!this.departamentoDetectado) {
                 return;
             }

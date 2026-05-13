@@ -2,16 +2,21 @@
 
 @section('content')
 
-<a href="{{ route('cotizaciones.create') }}">
-    Nueva Cotización
-</a>
-
-<br><br>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <!-- IZQUIERDA -->
+    <div class="d-flex align-items-center gap-3">
+        <a href="{{ route('cotizaciones.create') }}" 
+           class="btn btn-success">
+            Nueva Cotizacion
+        </a>
+    </div>
+</div>
 <div x-data="{ openId: null }">
-    <table class="table table-hover">
+
+    <table class="table table-bordered table-hover">
         <thead>
             <tr>
-                <th>#</th>
+                <th>ID</th>
                 <th>Empresa</th>
                 <th>Tipo</th>
                 <th>Estado</th>
@@ -42,25 +47,42 @@
                 <td>
                     {{ $cotizacion->fecha_envio?->format('d/m/Y') ?? '-' }}
                 </td>
-                <td class="d-flex gap-2">
+                <td class="text-center">
+                    <div class="d-inline-flex justify-content-center align-items-center gap-2">
+                        <!-- BOTÓN VER -->
+                        <button
+                            @click="openId = openId === {{ $cotizacion->id }} ? null : {{ $cotizacion->id }}"
+                            class="btn btn-sm btn-outline-primary"
+                        >
+                            <span x-text="openId === {{ $cotizacion->id }} ? 'Ocultar' : 'Ver'"></span>
+                        </button>
+                        <!-- BOTÓN EDITAR -->
+                        <a href="{{ route('cotizaciones.edit', $cotizacion) }}"
+                        class="btn btn-sm btn-outline-warning">
+                            Editar
+                        </a>
 
-                    <!-- BOTÓN VER -->
-                    <button
-                        @click="openId = openId === {{ $cotizacion->id }} ? null : {{ $cotizacion->id }}"
-                        class="btn btn-sm btn-outline-primary"
-                    >
-                        <span x-text="openId === {{ $cotizacion->id }} ? 'Ocultar' : 'Ver'"></span>
-                    </button>
+                        <button
+                            type="button"
+                            class="btn btn-sm btn-outline-danger"
+                            onclick="eliminarCotizacion({{ $cotizacion->id }})"
+                        >
+                            Eliminar
+                        </button>
 
-                    <!-- BOTÓN EDITAR -->
-                    <a href="{{ route('cotizaciones.edit', $cotizacion) }}"
-                    class="btn btn-sm btn-outline-warning">
-                        Editar
-                    </a>
+                        <form
+                            id="delete-form-{{ $cotizacion->id }}"
+                            action="{{ route('cotizaciones.destroy', $cotizacion->id) }}"
+                            method="POST"
+                            style="display: none;"
+                        >
+                            @csrf
+                            @method('DELETE')
+                        </form>
 
+                    </div>
                 </td>
             </tr>
-
             <!-- FILA EXPANDIBLE -->
             <tr x-show="openId === {{ $cotizacion->id }}" x-transition.opacity x-cloak>
                 <td colspan="7">
@@ -81,7 +103,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- Card: Fechas -->
                         <div class="col-md-4 mb-3">
                             <div class="card shadow-sm">
@@ -134,4 +155,8 @@
         </tbody>
     </table>
 </div>
+
+<script src="{{ asset(config('rutas.js_especificos') . 'cotizaciones/cotizaciones_index.js') }}"></script>
+
+
 @endsection

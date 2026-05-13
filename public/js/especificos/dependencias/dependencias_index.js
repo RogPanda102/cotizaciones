@@ -1,6 +1,6 @@
-function confirmDelete(id) {
+function eliminarDependencia(id) {
     confirmarEliminacion({
-        titulo: '¿Eliminar pedido?',
+        titulo: '¿Eliminar dependencia?',
         onConfirm: () => {
             document
                 .getElementById('delete-form-' + id)

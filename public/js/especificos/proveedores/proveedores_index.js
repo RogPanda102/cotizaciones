@@ -1,6 +1,6 @@
-function confirmDelete(id) {
+function eliminarProveedor(id) {
     confirmarEliminacion({
-        titulo: '¿Eliminar pedido?',
+        titulo: '¿Eliminar proveedor?',
         onConfirm: () => {
             document
                 .getElementById('delete-form-' + id)
