@@ -32,8 +32,8 @@
 
 @if($pedido->puedeEditarCompras())
 
-<a href="{{ route('compras.edit', $compra->id) }}" 
-onclick="event.preventDefault(); confirmEdit('{{ route('compras.edit', $compra->id) }}')">
+<a class="btn btn-warning btn-sm" href="{{ route('compras.edit', $compra->id) }}" 
+onclick="event.preventDefault(); editarCompra('{{ route('compras.edit', $compra->id) }}')">
 Editar
 </a>
 
@@ -45,7 +45,7 @@ Editar
 
     <button type="button"
         class="btn btn-danger btn-sm"
-        onclick="confirmDelete({{ $compra->id }})">
+        onclick="eliminarCompra({{ $compra->id }})">
         Eliminar
     </button>
 </form>
@@ -145,35 +145,8 @@ ${{ number_format($pedido->totalGastado(), 2) }}
 
     </form>
 @endif
-<script>
-function confirmDelete(id) {
-    Swal.fire({
-        title: '¿Eliminar compra?',
-        text: "Esta acción no se puede deshacer",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            document.getElementById('delete-form-' + id).submit();
-        }
-    });
-}
-function confirmEdit(url) {
-    Swal.fire({
-        title: '¿Editar compra?',
-        text: "Podrás modificar los datos",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Sí, editar',
-        cancelButtonText: 'Cancelar'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            window.location.href = url;
-        }
-    });
-}
-</script>
+
+        {{-- ESTE SCRIPT ES DE LOS JS ESPECIFICOS, NOTIFICACIONES --}}
+<script src="{{ asset('js/especificos/notificaciones_alertas.js') }}"></script> 
+        {{-- ESTE SCRIPT ES DE LOS JS ESPECIFICOS, NOTIFICACIONES --}}
+        <script src="{{ asset(config('rutas.js_especificos') . 'pedidos/tabs/pedidos_compras.js') }}"></script>

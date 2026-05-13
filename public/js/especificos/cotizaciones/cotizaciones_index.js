@@ -1,6 +1,6 @@
-function confirmDelete(id) {
+function eliminarCotizacion(id) {
     confirmarEliminacion({
-        titulo: '¿Eliminar pedido?',
+        titulo: '¿Eliminar Cotizacion?',
         onConfirm: () => {
             document
                 .getElementById('delete-form-' + id)

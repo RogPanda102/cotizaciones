@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Cotizacion;
 use App\Enums\EstadoCotizacion;
+use App\Enums\TipoAlerta;
 use App\Http\Requests\StoreCotizacionRequest;
 use App\Http\Requests\UpdateCotizacionRequest;
 use App\Services\CotizacionService;
@@ -98,7 +99,26 @@ class CotizacionController extends Controller
      */
     public function edit(Cotizacion $cotizacion)
     {
-        return view('cotizaciones.edit', array_merge($this->getFormData(),['cotizacion' => $cotizacion]));
+        $datos = array();
+        $datos['nombre_pagina'] = '';
+        $datos['tarea'] = 'Editar cotizacion';
+
+        $breadcrumb = array
+        (
+            array
+            (
+                'tarea' => 'Cotizaciones',
+                'href' => route('cotizaciones.index')
+            ),
+            array
+            (
+                'tarea' => 'Editar Cotizacion',
+                'href' => '#'
+            )
+        );
+        $datos['breadcrumb'] = breadcrumb($datos['tarea'], $breadcrumb);
+        
+        return view('cotizaciones.edit', array_merge($datos, $this->getFormData(),['cotizacion' => $cotizacion]));
     } 
 
     /**
@@ -111,9 +131,9 @@ class CotizacionController extends Controller
         
         $cotizacion = $service->actualizarCotizacion($cotizacion, $data);
 
+        mensaje('Cotizacion Actualizada', TipoAlerta::SUCCESS);
         return redirect()
-            ->route('cotizaciones.index', $cotizacion)
-            ->with('success', 'Cotización actualizada correctamente');
+            ->route('cotizaciones.index', $cotizacion);
     } 
 
     /**
@@ -122,10 +142,9 @@ class CotizacionController extends Controller
     public function destroy(Cotizacion $cotizacion)
     {
         $cotizacion->delete();
-
+        mensaje('Cotizacion eliminada', TipoAlerta::SUCCESS);
         return redirect()
-            ->route('cotizaciones.index')
-            ->with('success', 'Cotización eliminada');
+            ->route('cotizaciones.index');
     } 
 
     //ESTA FUNCION CONTROLA EL BREADCRUMB//

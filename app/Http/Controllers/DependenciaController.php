@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TipoAlerta;
 use Illuminate\Http\Request;
 use App\Models\Dependencia;
 
@@ -99,10 +100,8 @@ class DependenciaController extends Controller
         ]);
 
         $dependencia->update($request->only(['nombre_oficial', 'nombre_corto']));
-
-        return redirect()
-            ->route('dependencias.index')
-            ->with('success', 'Dependencia actualizada correctamente');
+        mensaje('Dependencia actualizada',TipoAlerta::SUCCESS);
+        return redirect()->route('dependencias.index');
     }
 
     private function cargarDatos(string $tarea, array $breadcrumb)
@@ -113,4 +112,13 @@ class DependenciaController extends Controller
             'breadcrumb' => breadcrumb($tarea, $breadcrumb),
         ];
     }
+
+    public function destroy(Dependencia $dependencia)
+    {
+        $dependencia->delete();
+        mensaje('Dependencia eliminada', TipoAlerta::SUCCESS);
+        return redirect()
+            ->route('dependencias.index');
+    } 
+
 }

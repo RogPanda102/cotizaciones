@@ -162,4 +162,13 @@ class ProveedorController extends Controller
 
         return $datos;
     }
+
+    public function destroy(Proveedor $proveedor)
+    {
+        $proveedor->delete();
+        mensaje('Proveedor eliminado', TipoAlerta::SUCCESS);
+        return redirect()
+            ->route('proveedores.index');
+    } 
+
 }
