@@ -39,13 +39,14 @@ class PedidoController extends Controller
     public function create()
     {
         $cotizaciones = Cotizacion::all();
-        $dependencias = Dependencia::all();
-        $empresas = Empresa::all();
+        $empresas = Empresa::all(); // revisar posible redundancia
         $proveedores = Proveedor::all();
-        $departamentos = Departamento::all();
         $analistas = Analista::all();
         $empresaId = request('empresa_id');
         $empresa = Empresa::findOrFail($empresaId);
+        $dependencias = Dependencia::with([
+            'departamentos:id,dependencia_id,nombre_departamento,responsable'
+        ])->get();
 
         $datos = array();
         $datos['nombre_pagina'] = '';
@@ -65,7 +66,7 @@ class PedidoController extends Controller
             )
         );
         $datos['breadcrumb'] = breadcrumb($datos['tarea'], $breadcrumb);
-        return view('pedidos.create', array_merge($datos, compact('cotizaciones', 'dependencias', 'empresas', 'proveedores', 'departamentos', 'analistas', 'empresaId')));
+        return view('pedidos.create', array_merge($datos, compact('cotizaciones', 'dependencias', 'empresas', 'proveedores', 'analistas', 'empresaId')));
     }
 
     /**
@@ -115,10 +116,28 @@ class PedidoController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Pedido $pedido)
     {
-        $pedido = Pedido::findOrFail($id);
-        return view('pedidos.edit', compact('pedido'));
+        $cotizaciones = Cotizacion::all();
+
+        $empresas = Empresa::all();
+
+        $proveedores = Proveedor::all();
+
+        $analistas = Analista::all();
+
+        $dependencias = Dependencia::with([
+            'departamentos:id,dependencia_id,nombre_departamento,responsable'
+        ])->get();
+
+        return view('pedidos.edit', compact(
+            'pedido',
+            'cotizaciones',
+            'empresas',
+            'proveedores',
+            'analistas',
+            'dependencias'
+        ));
     }
 
     /**
