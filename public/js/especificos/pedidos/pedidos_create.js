@@ -3,10 +3,32 @@ let departamentoDetectado = null;
 function pedidoForm() {
 
     return {
+        dependencias: window.appData?.dependencias ?? [],
 
         tipo: window.pedidoOld?.tipo ?? '',
+
+        dependenciaId: window.pedidoOld?.dependenciaId ?? '',
+
         departamentoId: window.pedidoOld?.departamentoId ?? '',
-        analistaId: window.pedidoOld?.analistaId ?? ''
+
+        analistaId: window.pedidoOld?.analistaId ?? '',
+
+        get departamentosFiltrados() {
+
+            const dependencia = this.dependencias.find(
+                dep => dep.id == this.dependenciaId
+            );
+
+            return dependencia
+                ? dependencia.departamentos
+                : [];
+        },
+
+        limpiarDepartamento() {
+
+            this.departamentoId = '';
+
+        }
 
     };
 

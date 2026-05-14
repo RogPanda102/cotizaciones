@@ -17,7 +17,7 @@
 
     Route::resource('dependencias', DependenciaController::class);
     Route::resource('cotizaciones', CotizacionController::class);
-    Route::resource('pedidos', PedidoController::class);
+    Route::resource('pedidos', PedidoController::class)->parameters(['pedidos' => 'pedido']);
     Route::resource('compras', CompraController::class);
     Route::resource('proveedores', ProveedorController::class) ->parameters([
         'proveedores' => 'proveedor'

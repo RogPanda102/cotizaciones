@@ -50,11 +50,20 @@
 
             <div class="col-md-4 mb-3">
                 <label class="form-label">Dependencia</label>
-                <select name="dependencia_id" class="form-control">
+                <select
+                    name="dependencia_id"
+                    class="form-control"
+                    x-model="dependenciaId"
+                    @change="limpiarDepartamento"
+                >
                     <option value="">Seleccionar dependencia</option>
-                    @foreach($dependencias as $dep)
-                        <option value="{{ $dep->id }}">{{ $dep->nombre_oficial }}</option>
-                    @endforeach
+
+                    <template x-for="dep in dependencias" :key="dep.id">
+                        <option
+                            x-bind:value="String(dep.id)"
+                            x-text="dep.nombre_oficial"
+                        ></option>
+                    </template>
                 </select>
             </div>
         </div>
@@ -67,13 +76,23 @@
         <div class="row">
             <div class="col-md-4 mb-3">
                 <label class="form-label">Departamento</label>
-                <select name="departamento_id" id="departamentoSelect" class="form-control w-100" x-model="departamentoId">
+                <select
+                    name="departamento_id"
+                    id="departamentoSelect"
+                    class="form-control w-100"
+                    x-model="departamentoId"
+                >
                     <option value="">Selecciona departamento</option>
-                    @foreach($departamentos as $departamento)
-                        <option value="{{ $departamento->id }}" {{ old('departamento_id') == $departamento->id ? 'selected' : '' }}>
-                            {{ $departamento->nombre_departamento }} - {{ $departamento->responsable }}
-                        </option>
-                    @endforeach
+
+                    <template
+                        x-for="departamento in departamentosFiltrados"
+                        :key="departamento.id"
+                    >
+                        <option
+                            x-bind:value="String(departamento.id)"
+                            x-text="`${departamento.nombre_departamento} - ${departamento.responsable}`"
+                        ></option>
+                    </template>
                 </select>
 
                 <button type="button" class="btn btn-outline-secondary mt-2" data-bs-toggle="modal" data-bs-target="#modalDepartamento">
@@ -360,12 +379,14 @@
 
     window.pedidoOld = {
         tipo: "{{ old('tipo') }}",
+        dependenciaId: "{{ old('dependencia_id') }}",
         departamentoId: "{{ old('departamento_id') }}",
         analistaId: "{{ old('analista_id') }}"
     };
 
     window.appData = {
         csrfToken: "{{ csrf_token() }}",
+        dependencias: @json($dependencias),
         routes: {
             analistasStore: "{{ route('analistas.store') }}",
             departamentosStore: "{{ route('departamentos.store') }}" ,
