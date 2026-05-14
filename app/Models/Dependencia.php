@@ -12,4 +12,9 @@ class Dependencia extends Model
         'nombre_oficial',
         'nombre_corto',
     ];
+
+    public function pedidos()
+    {
+        return $this->hasMany(Pedido::class);
+    }
 }

@@ -89,10 +89,9 @@ class ProveedorController extends Controller
                 'email'
             ])
         );
-
+        mensaje('El Proveedor Ha Sido Actualizado', TipoAlerta::SUCCESS);
         return redirect()
-            ->route('proveedores.index')
-            ->with('success', 'Proveedor actualizado correctamente');
+            ->route('proveedores.index');
     }
 
     //ESTA FUNCION CONTROLA EL BREADCRUMB DEL PROGRAMA
@@ -143,7 +142,6 @@ class ProveedorController extends Controller
         $datos = [];
         $datos['nombre_pagina'] = '';
         $datos['tarea'] = 'Editar Proveedor';
-
         $breadcrumb = [
             [
                 'tarea' => 'Proveedores',
@@ -154,21 +152,21 @@ class ProveedorController extends Controller
                 'href' => '#'
             ]
         ];
-
         $datos['breadcrumb'] = breadcrumb(
             $datos['tarea'],
             $breadcrumb
         );
-
         return $datos;
     }
 
     public function destroy(Proveedor $proveedor)
     {
+        // ESTA FUNCION VALIDA QUE NO SE ELIMINE UNA PROVEEDOR SI EXISTE RELACION CON UN PEDIDO
+        if ($proveedor->pedidos()->exists()) {
+        mensaje('No puedes eliminar este proveedor porque tiene pedidos relacionados',TipoAlerta::WARNING);
+        return redirect()->route('proveedores.index');}
         $proveedor->delete();
-        mensaje('Proveedor eliminado', TipoAlerta::SUCCESS);
-        return redirect()
-            ->route('proveedores.index');
-    } 
-
+        mensaje('Proveedor eliminado correctamente',TipoAlerta::SUCCESS);
+        return redirect()->route('proveedores.index');
+    }
 }

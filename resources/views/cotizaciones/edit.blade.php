@@ -1,7 +1,5 @@
 @extends('layouts.app')
 @section('content')
-<h2>Editar Cotización</h2>
-
 @if ($errors->any())
     <div>
         @foreach ($errors->all() as $error)
