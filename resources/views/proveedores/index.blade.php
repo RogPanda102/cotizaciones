@@ -2,9 +2,17 @@
 
 @section('content')
 
-<a href="{{ route('proveedores.create') }}">Nuevo proveedor</a>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <!-- IZQUIERDA -->
+    <div class="d-flex align-items-center gap-3">
+        <a href="{{ route('proveedores.create') }}" 
+           class="btn btn-success">
+            Nuevo Proveedor
+        </a>
+    </div>
+</div>
 
-<table>
+<table class="table table-bordered table-hover">
     <thead>
         <tr>
             <th>Empresa</th>
@@ -21,11 +29,33 @@
                 <td>{{ $proveedor->nombre_contacto }}</td>
                 <td>{{ $proveedor->telefono }}</td>
                 <td>{{ $proveedor->email }}</td>
-                <td>
-                    <a href="{{ route('proveedores.edit', $proveedor) }}">Editar</a>
+                <td class="text-center">
+                    <div class="d-inline-flex justify-content-center align-items-center gap-2">
+                        <a href="{{ route('proveedores.edit', $proveedor) }}"
+                        class="btn btn-outline-warning">
+                            Editar
+                        </a>
+                        <button
+                        type="button"
+                        class="btn btn-outline-danger"
+                        onclick="eliminarProveedor({{ $proveedor->id }})"
+                        >
+                        Eliminar
+                        </button>
+                        <form
+                            id="delete-form-{{ $proveedor->id }}"
+                            action="{{ route('proveedores.destroy', $proveedor->id) }}"
+                            method="POST"
+                            style="display: none;"
+                        >
+                            @csrf
+                            @method('DELETE')
+                        </form>
+                    </div>
                 </td>
             </tr>
         @endforeach
     </tbody>
 </table>
+<script src="{{ asset(config('rutas.js_especificos') . 'proveedores/proveedores_index.js') }}"></script>
 @endsection
