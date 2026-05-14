@@ -74,9 +74,9 @@ class CotizacionController extends Controller
     {
         $cotizacion = $service->crearCotizacion($request->validated());
 
+        mensaje('La cotizacion ha sido creada correctamente', TipoAlerta::SUCCESS);
         return redirect()
-            ->route('cotizaciones.index', $cotizacion)
-            ->with('success', 'Cotización creada correctamente');
+            ->route('cotizaciones.index', $cotizacion);
     }
 
     /**
@@ -141,11 +141,19 @@ class CotizacionController extends Controller
      */
     public function destroy(Cotizacion $cotizacion)
     {
+        // ESTA FUNCION VALIDA QUE NO SE ELIMINE UNA COTIZACION SI EXISTE RELACION CON UN PEDIDO
+        if ($cotizacion->pedido) {
+
+            mensaje('No puedes eliminar esta cotización porque tiene un pedido relacionado',TipoAlerta::WARNING);
+            return redirect()->route('cotizaciones.index');
+        }
         $cotizacion->delete();
-        mensaje('Cotizacion eliminada', TipoAlerta::SUCCESS);
-        return redirect()
-            ->route('cotizaciones.index');
-    } 
+        mensaje(
+            'Cotización eliminada correctamente',
+            TipoAlerta::SUCCESS
+        );
+        return redirect()->route('cotizaciones.index');
+    }
 
     //ESTA FUNCION CONTROLA EL BREADCRUMB//
     private function cargar_datos()

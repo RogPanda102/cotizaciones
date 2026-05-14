@@ -32,7 +32,7 @@ class DependenciaController extends Controller
     public function create()
     {
         $datos = $this->cargarDatos(
-            'Crear dependencia',
+            'Crear dependenciass',
             [
                 [
                     'tarea' => 'Dependencias',
@@ -46,6 +46,7 @@ class DependenciaController extends Controller
         );
         return view('dependencias.create', $datos);
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -63,8 +64,8 @@ class DependenciaController extends Controller
                 'nombre_corto',
             ])
         );
-
-        return redirect()->route('dependencias.index')->with('success', 'Dependencia creada correctamente');
+        mensaje('La dependencia ha sido creada', TipoAlerta::SUCCESS);
+        return redirect()->route('dependencias.index');
     }
 
     /**
@@ -113,12 +114,25 @@ class DependenciaController extends Controller
         ];
     }
 
-    public function destroy(Dependencia $dependencia)
+public function destroy(Dependencia $dependencia)
+{
+    // ESTA FUNCION VALIDA QUE NO SE ELIMINE UNA DEPENDENCIA SI EXISTE RELACION CON UN PEDIDO
+    if ($dependencia->pedidos()->exists()) 
     {
-        $dependencia->delete();
-        mensaje('Dependencia eliminada', TipoAlerta::SUCCESS);
+        mensaje(
+            'No puedes eliminar esta dependencia porque tiene pedidos relacionados',
+            TipoAlerta::WARNING
+        );
         return redirect()
             ->route('dependencias.index');
-    } 
+    }
+    $dependencia->delete();
+    mensaje(
+        'Dependencia eliminada',
+        TipoAlerta::SUCCESS
+    );
+    return redirect()
+        ->route('dependencias.index');
+    }
 
 }

@@ -7,4 +7,4 @@ function eliminarProveedor(id) {
                 ?.submit();
         }
     });
-}
+}   
