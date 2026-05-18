@@ -1,23 +1,13 @@
 @extends('layouts.app')
-
 @section('content')
+
 <div class="container mt-4">
     <div class="card shadow-sm">
         <div class="card-body">
 
             <h4 class="mb-4">Crear Pedido</h4>
 
-            @if ($errors->any())
-                <div style="color:red;">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-<form action="{{ route('pedidos.store') }}" method="POST">
+<form id="formPedido" action="{{ route('pedidos.store') }}" method="POST">
     @csrf
 
     <div x-data="pedidoForm()">
@@ -53,8 +43,9 @@
                 <select
                     name="dependencia_id"
                     class="form-control"
-                    x-model="dependenciaId"
-                    @change="limpiarDepartamento"
+                    {{-- x-model="dependenciaId"
+                    @change="limpiarDepartamento" --}}
+                    onchange="$(this).valid()"
                 >
                     <option value="">Seleccionar dependencia</option>
 
@@ -375,26 +366,28 @@
     </div>
   </div>
 </div>
-<script>
 
-    window.pedidoOld = {
-        tipo: "{{ old('tipo') }}",
-        dependenciaId: "{{ old('dependencia_id') }}",
-        departamentoId: "{{ old('departamento_id') }}",
-        analistaId: "{{ old('analista_id') }}"
-    };
+@push('scripts')
 
-    window.appData = {
-        csrfToken: "{{ csrf_token() }}",
-        dependencias: @json($dependencias),
-        routes: {
-            analistasStore: "{{ route('analistas.store') }}",
-            departamentosStore: "{{ route('departamentos.store') }}" ,
-            departamentosBuscar: "{{ route('departamentos.buscar') }}"
-        }
-    };
+    <script>
+        window.pedidoOld = {
+            tipo: "{{ old('tipo') }}",
+            dependenciaId: "{{ old('dependencia_id') }}",
+            departamentoId: "{{ old('departamento_id') }}",
+            analistaId: "{{ old('analista_id') }}"
+        };
+        window.appData = {
+            csrfToken: "{{ csrf_token() }}",
+            dependencias: @json($dependencias),
+            routes: {
+                analistasStore: "{{ route('analistas.store') }}",
+                departamentosStore: "{{ route('departamentos.store') }}" ,
+                departamentosBuscar: "{{ route('departamentos.buscar') }}"
+            }
+        };
+    </script>
 
-</script>
-<script src="{{ asset(config('rutas.js_especificos') . 'pedidos/pedidos_create.js') }}"></script>
+    <script src="{{ asset(config('rutas.js_especificos') . 'pedidos/pedidos_create.js') }}"></script>
+@endpush
 
 @endsection
