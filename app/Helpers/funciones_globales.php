@@ -4,41 +4,95 @@
     // =======================  
     // B R E A D   C R U M B
     // =======================
-    function breadcrumb ($tarea = '', $breadcrumb = array())
-    {
-        // dd($breadcrumb);
-        $html='';
-        if (sizeof($breadcrumb)>0)
-            {
-            $html.= '
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1 class="m-0">
-                            '.$tarea.'
-                        </h1>
-                    </div>
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-end">
-                            <li class="breadcrumb-item"><a href="'.route('empresas.index').'">Inicio</a></li>';
-                            foreach ($breadcrumb as $nav) {
-                                if(isset($nav['href'])){
-                                    if($nav["href"] != '#'){
-                                        $html.= '<li class="breadcrumb-item active"><a href="'.$nav["href"].'">'.$nav["tarea"].'</a></li>';
-                                    }//end nav
-                                    else{
-                                        $html.= '<li class="breadcrumb-item text-black">'.$nav["tarea"].'</li>';
-                                    }//end else
-                                }//end if isset
-                            }//end foreach
-                            $html.='</ol>
-                        </ol>
-                    </div>
-                </div>
-            ';
-        } //END IF SIZEOF
-        return $html;
+    function breadcrumb($tarea = '', $breadcrumb = array())
+{
+    $html = '';
 
+    if (sizeof($breadcrumb) > 0) {
+
+        $html .= '
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
+
+            <div>
+
+                <h3 class="mb-0 fw-bold text-dark">
+                    '.$tarea.'
+                </h3>
+
+                <p class="text-muted mb-0" style="font-size: 14px;">
+                    Panel de administración
+                </p>
+
+            </div>
+
+            <nav aria-label="breadcrumb">
+
+                <ol class="breadcrumb bg-transparent mb-0">
+
+                    <li class="breadcrumb-item">
+
+                        <a href="'.route('empresas.index').'"
+                            class="text-decoration-none">
+
+                            Inicio
+
+                        </a>
+
+                    </li>
+
+        ';
+
+        foreach ($breadcrumb as $nav) {
+
+            if (isset($nav['href'])) {
+
+                if ($nav["href"] != '#') {
+
+                    $html .= '
+
+                        <li class="breadcrumb-item">
+
+                            <a href="'.$nav["href"].'"
+                                class="text-decoration-none">
+
+                                '.$nav["tarea"].'
+
+                            </a>
+
+                        </li>
+
+                    ';
+
+                } else {
+
+                    $html .= '
+
+                        <li class="breadcrumb-item active text-dark"
+                            aria-current="page">
+
+                            '.$nav["tarea"].'
+
+                        </li>
+
+                    ';
+                }
+            }
+        }
+
+        $html .= '
+
+                </ol>
+
+            </nav>
+
+        </div>
+
+        ';
     }
+
+    return $html;
+}
 
     function mensaje($texto = "",TipoAlerta $tipo = TipoAlerta::INFO,$tiempo = 1000)
     {

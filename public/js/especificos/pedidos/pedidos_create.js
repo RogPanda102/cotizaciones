@@ -295,3 +295,101 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 });
+
+    $(document).ready(function () {
+
+        $('#formPedido').validate({
+
+            errorClass: 'error',
+
+            highlight: function(element) {
+                $(element).addClass('is-invalid');
+            },
+
+            unhighlight: function(element) {
+                $(element).removeClass('is-invalid');
+            },
+
+            rules: {
+
+                dependencia_id: {
+                    required: true
+                },
+
+                departamento_id: {
+                    required: true
+                },
+
+                analista_id:{
+                    required: true
+                },
+
+                proveedor_id:{
+                    required: true
+                },
+
+                monto_total_aprobado: {
+                    required: true
+                },
+
+                fecha_adjudicacion: {
+                    required: true
+                },
+
+                dias_entrega: {
+                    required: true
+                },
+
+                dias_credito: {
+                    required: true
+                },
+
+                tipo: {
+                    required: true
+                }
+
+            },
+
+            messages: {
+
+                dependencia_id: {
+                    required: 'Selecciona una dependencia'
+                },
+
+                departamento_id: {
+                    required: 'Selecciona un departamento'
+                },
+
+                analista_id:{
+                    required: 'Selecciona o agrega un analista'
+                },
+
+                proveedor_id:{
+                    required: 'Selecciona o agrega un proveedor'
+                },
+
+                monto_total_aprobado: {
+                    required: 'Ingresa el monto aprobado'
+                },
+
+                fecha_adjudicacion: {
+                    required: 'Selecciona la fecha'
+                },
+
+                dias_entrega: {
+                    required: 'Ingresa los días de entrega'
+                },
+
+                dias_credito: {
+                    required: 'Ingresa los días de crédito'
+                },
+
+                tipo: {
+                    required: 'Selecciona un tipo'
+                }
+
+            }
+
+        });
+
+    });
